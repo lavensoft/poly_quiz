@@ -11,6 +11,7 @@
  */
 
 import 'package:http/http.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "../../global/global.dart";
 import "dart:convert";
 import "package:shared_preferences/shared_preferences.dart";
@@ -59,13 +60,13 @@ const avatarsImage = [
 
 class API {
   static final Map<String, String> _headers = {
-        "Content-Type": "application/json",
-        //"w_api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
-        "api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
-        "app_id" : "625453bc7b3cbb43d51602a3",
+    "Content-Type": "application/json",
+    "w_api_key" : dotenv.env["W_API_KEY"]!,
+    //"api_key" : dotenv.env["API_KEY"]!,
+    "app_id" : dotenv.env["APP_ID"]!,
   };
 
-  static String apiUrl = "http://192.168.1.3:8080";
+  static String apiUrl = "http://localhost:8080";
 
   //*USER API
   static Future addUser(String email, String name, String password) async {
@@ -77,7 +78,7 @@ class API {
       "password" : password,
       "avatar" : avatarsImage[random.nextInt(avatarsImage.length - 1)].toString(),
       "usrData" : {
-        "gems" : 1000
+        "gems" : 500
       }
     })), headers: _headers);
 
@@ -121,10 +122,29 @@ class API {
     return json.decode(response.body);
   }
 
+  static Future getSingleQuiz(String quizId) async {
+    Response response = await get(Uri.parse("$apiUrl/quiz/$quizId"), headers: _headers);
+    return json.decode(response.body);
+  }
+
   static Future getUserQuizRank() async{
     final prefs = await SharedPreferences.getInstance();
 
     Response response = await get(Uri.parse("$apiUrl/quiz/ranking/${prefs.getString("userId")}"), headers: _headers);
+    return json.decode(response.body);
+  }
+
+  //*QUIZ ANSWERS API
+  static Future addQuizAnswers(String quizId, String questionId, int answer) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Response response = await post(Uri.parse("$apiUrl/quiz_answers"), body: utf8.encode(jsonEncode({
+      "questionId" : questionId,
+      "answer" : answer,
+      "userId" : prefs.getString("userId"),
+      "quizId" : quizId,
+    })), headers: _headers);
+
     return json.decode(response.body);
   }
 }

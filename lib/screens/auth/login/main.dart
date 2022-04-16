@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final prefs = await SharedPreferences.getInstance();
 
     if(prefs.getString("email") != null && prefs.getString("name") != null && prefs.getString("userId") != null) {
-      Navigator.of(context).pushReplacementNamed("/");
+      Navigator.of(context).pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
     }
   }
 
@@ -97,83 +97,91 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Poly Quiz",
-                style: TextStyle(
-                  fontSize: 56,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                "Hãy đăng nhập với gmail FPT nhé 😘",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 48),
-              TextBox(
-                hintText: "Email",
-                controller: _emailController,
-              ),
-              const SizedBox(height: 16),
-              TextBox(
-                obscureText: true,
-                hintText: "Mật khẩu",
-                controller: _passwordController,
-              ),
-              const SizedBox(height: 48),
-              PrimaryButton(
-                label: "Đăng nhập", 
-                onPressed: () {
-                  _handleSignIn();
-                }
-              ),
-              const SizedBox(height: 32),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, "/signup");
-                },
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Bạn chưa có tài khoản?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black45
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Text(
-                        "Đăng ký",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange
-                        ),
-                      ),
-                    ],
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          alignment: Alignment.center,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 450),
+            child: Container( 
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Poly Quiz",
+                    style: TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                )
+                  const SizedBox(height: 12),
+                  const Text(
+                    "Hãy đăng nhập với gmail FPT nhé 😘",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  TextBox(
+                    hintText: "Email",
+                    controller: _emailController,
+                  ),
+                  const SizedBox(height: 16),
+                  TextBox(
+                    obscureText: true,
+                    hintText: "Mật khẩu",
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(height: 48),
+                  PrimaryButton(
+                    label: "Đăng nhập", 
+                    onPressed: () {
+                      _handleSignIn();
+                    }
+                  ),
+                  const SizedBox(height: 32),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/signup");
+                    },
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Bạn chưa có tài khoản?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black45
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Text(
+                            "Đăng ký",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        )
+      )
     );
   }
 }

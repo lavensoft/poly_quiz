@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> _quizList = [];
   Map<dynamic, dynamic>? userData;
   String userRanking = "";
+  int userRankNum = 0;
+  int rankTotal = 0;
   bool isLoading = true;
 
   @override
@@ -41,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
 
     if(prefs.getString("email") == null || prefs.getString("name") == null || prefs.getString("userId") == null) {
-      Navigator.of(context).pushReplacementNamed("/login");
+      Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
     }else {
       API.getAllQuiz().then((value) {
         setState(() {
@@ -60,6 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
       API.getUserQuizRank().then((value) {
         setState(() {
           userRanking = "${value["data"]["rank"]}/${value["data"]["total"]}";
+          userRankNum = value["data"]["rank"];
+          rankTotal = value["data"]["total"];
+
           isLoading = false;
         });
       });
@@ -80,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
       prefs.remove("userId");
       prefs.remove("companyId");
 
-      Navigator.of(context).pushReplacementNamed("/login");
+      Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
     }
 
     return Scaffold(
@@ -103,6 +108,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     margin: const EdgeInsets.only(bottom: 32),
                     child: Row(
                       children: [
+                        //*QR SCAN BUTTON
+                        InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 24),
+                            padding: const EdgeInsets.only(top: 16, right: 16, bottom: 16),
+                            decoration: const BoxDecoration(
+                              //borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: Colors.black.withOpacity(0.2),
+                              //     blurRadius: 4,
+                              //     offset: Offset(0, 2)
+                              //   )
+                              // ]
+                            ),
+                            child: const Icon(
+                              Icons.qr_code_scanner_rounded,
+                            ),
+                          )
+                        ),
+
                         Expanded(child: Container()),
                         //*AVATAR
                         Container(
@@ -166,8 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     margin: const EdgeInsets.only(left: 24),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                              Text(
+                        Text(
                           "Hi ${userData?["name"]} 👋",
                           style: const TextStyle(
                             fontSize: 15,
@@ -204,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           purple: item["moreData"]?["color"] == "purple",
                           orange: item["moreData"]?["color"] == "orange",
                           onTap: () {
-                            Navigator.pushNamed(context, "/quiz", arguments: item);
+                            Navigator.pushNamed(context, "/quiz", arguments: item["_id"]);
                           }
                         );
                       },
@@ -254,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   purple: item["moreData"]?["color"] == "purple",
                                   orange: item["moreData"]?["color"] == "orange",
                                   onTap: () {
-                                    Navigator.pushNamed(context, "/quiz", arguments: item);
+                                    Navigator.pushNamed(context, "/quiz", arguments: item["_id"]);
                                   }
                                 );
                               },
@@ -343,7 +371,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Row(
               children: [
-                SvgPicture.asset("assets/icons/rubyRank.svg", height: 40), //*ICON
+                SvgPicture.asset("assets/icons/${Global.getUserRankBadge(
+                  userRankNum,
+                  rankTotal
+                )}", height: 40), //*ICON
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

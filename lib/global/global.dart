@@ -16,4 +16,22 @@ export "api.dart";
 export "func.dart";
 
 class Global {
+  //*RANKING
+  static List<String> rankBadges = [
+    "diamondRank.svg",
+    "emeraldRank.svg",
+    "rubyRank.svg",
+    "goldRank.svg",
+    "sapphireRank.svg",
+  ];
+
+  static String getUserRankBadge(int userRank, int total) {
+    double rank = userRank / total * rankBadges.length;
+
+    if(userRank <= 1) {
+      return rankBadges[0];
+    }
+
+    return rankBadges[rank.ceil() - 1];
+  }
 }

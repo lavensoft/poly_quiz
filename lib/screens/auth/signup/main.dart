@@ -92,7 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
             prefs.setString("userId", userData["_id"]);
             prefs.setString("companyId", userData["companyId"]);
 
-            Navigator.pushReplacementNamed(context, "/");
+            Navigator.of(context).pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
           }else{
             if(value["message"] == "USER_IS_ALREADY") {
               _handleShowAlert("✉️", "Email đã được sử dụng");
@@ -105,87 +105,95 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Đăng Ký",
-                style: TextStyle(
-                  fontSize: 56,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                "Hãy đăng ký với gmail FPT nhé 😘",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 48),
-              TextBox(
-                hintText: "Họ & Tên",
-                controller: _nameController,
-              ),
-              const SizedBox(height: 16),
-              TextBox(
-                hintText: "Email",
-                controller: _emailController,
-              ),
-              const SizedBox(height: 16),
-              TextBox(
-                obscureText: true,
-                hintText: "Mật khẩu",
-                controller: _passwordController,
-              ),
-              const SizedBox(height: 48),
-              PrimaryButton(
-                label: "Đăng ký", 
-                onPressed: () {
-                  _handleSignup();
-                }
-              ),
-              const SizedBox(height: 32),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, "/login");
-                },
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Bạn đã có tài khoản?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black45
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Text(
-                        "Đăng nhập",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange
-                        ),
-                      ),
-                    ],
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          alignment: Alignment.center,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 450),
+            child: Container( 
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Đăng Ký",
+                    style: TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                )
-              )
-            ],
-          ),
-        ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    "Hãy đăng ký với gmail FPT nhé 😘",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  TextBox(
+                    hintText: "Họ & Tên",
+                    controller: _nameController,
+                  ),
+                  const SizedBox(height: 16),
+                  TextBox(
+                    hintText: "Email",
+                    controller: _emailController,
+                  ),
+                  const SizedBox(height: 16),
+                  TextBox(
+                    obscureText: true,
+                    hintText: "Mật khẩu",
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(height: 48),
+                  PrimaryButton(
+                    label: "Đăng ký", 
+                    onPressed: () {
+                      _handleSignup();
+                    }
+                  ),
+                  const SizedBox(height: 32),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/login");
+                    },
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Bạn đã có tài khoản?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black45
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Text(
+                            "Đăng nhập",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  )
+                ],
+              ),
+            ),
+          )
+        )
       ),
     );
   }

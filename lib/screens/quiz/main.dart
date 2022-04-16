@@ -11,9 +11,9 @@
  */
 
 import "package:flutter/material.dart";
+import "package:flutter/cupertino.dart";
 import "package:quizz/lavenes.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "package:flutter_svg/svg.dart";
 import "./play/main.dart";
 import "./question/main.dart";
 import "./congras/main.dart";
@@ -21,9 +21,9 @@ import "../../global/global.dart";
 import "dart:async";
 
 class QuizScreen extends StatefulWidget {
-  QuizScreen({Key? key, required this.data}) : super(key : key);
+  QuizScreen({Key? key, required this.quizId}) : super(key : key);
 
-  final Map<String, dynamic> data;
+  final String quizId;
 
   @override
   _QuizScreenState createState() => _QuizScreenState();
@@ -32,6 +32,7 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   var quizData;
   var questionData;
+  List<int> userAnswers = [];
 
   //*SCREEN VISIBLE
   bool playScreenVisible = true;
@@ -40,6 +41,7 @@ class _QuizScreenState extends State<QuizScreen> {
   bool betScreenVisible = false;
   bool endScreenVisible = false;
   bool loadingScreenVisible = false;
+  bool isLoading = true;
 
   //*QUESTION SCREEN
   int questionCountdown = 11;
@@ -65,19 +67,22 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
 
-    var argQuizData = widget.data;
-    var argQuestionsData = argQuizData["questions"];
+    API.getSingleQuiz(widget.quizId).then((result) {
+      var argQuizData = result["data"];
+      var argQuestionsData = argQuizData["questions"];
 
-    argQuestionsData = shuffle(argQuestionsData); //*SHUFFLE QUESTIONS
+      argQuestionsData = shuffle(argQuestionsData); //*SHUFFLE QUESTIONS
 
-    if(argQuizData["moreData"]?["questionsPerRound"] != null) { //*LIMIT QUESTIONS
-      argQuestionsData = argQuestionsData.sublist(0, int.parse(argQuizData["moreData"]["questionsPerRound"]));
-    }
+      if(argQuizData["moreData"]?["questionsPerRound"] != null) { //*LIMIT QUESTIONS
+        argQuestionsData = argQuestionsData.sublist(0, argQuizData["moreData"]["questionsPerRound"]);
+      }
 
-    setState(() {
-      quizData = argQuizData;
-      questionData = argQuestionsData;
-      gemsBet = argQuestionsData[0]["score"].toInt(); //*Set score per question
+      setState(() {
+        quizData = argQuizData;
+        questionData = argQuestionsData;
+        gemsBet = argQuestionsData[0]["score"].toInt(); //*Set score per question
+        isLoading = false;
+      });
     });
 
     _loadGems();
@@ -90,6 +95,29 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       gems = prefs.getInt("gems") ?? 0;
     });
+  }
+
+  //*WHEN FINISH
+  void _handleFinishGame() async{
+    //* Update user gems
+    await API.updateUserGems(gems);
+
+    //*Update user answers
+    int index = 0;
+
+    await Future.forEach(userAnswers, (element) async {
+      await API.addQuizAnswers(quizData["_id"], questionData[index]["id"], int.parse(element.toString())).then((value) {
+        if(value["code"] == 200) {
+          index++;
+        }
+      });
+    });
+
+    setState(() {
+      loadingScreenVisible = false;
+    });
+
+    Navigator.pushReplacementNamed(context, "/");
   }
 
   @override
@@ -122,15 +150,19 @@ class _QuizScreenState extends State<QuizScreen> {
 
     void handleAnswer(int index) {
       if(answerSelected == -1 && index != -2 && !isWaitingQuestion) {
+        List<int> tUserAnswers = userAnswers;
+        tUserAnswers.add(index);
+
         setState(() {
           answerSelected = index;
           isWaitingQuestion = true;
+          userAnswers = tUserAnswers;
         });
 
         countDownTimer!.cancel();
 
         Future.delayed(const Duration(seconds: 1), () {
-          if(index == quizData["questions"][questionIndex]["correct"]) {
+          if(questionData[questionIndex]["correct"].indexOf(index) > -1) {
             setState(() {
               answerCorrect = true;
               answerWrong = false;
@@ -218,16 +250,7 @@ class _QuizScreenState extends State<QuizScreen> {
           loadingScreenVisible = true;
         });
 
-        //* Update user gems
-        API.updateUserGems(gems).then((value) {
-          if(value["code"] == 200) {
-            setState(() {
-              loadingScreenVisible = false;
-            });
-
-            Navigator.pushReplacementNamed(context, "/");
-          }
-        });
+        _handleFinishGame();
       }
     }
 
@@ -254,7 +277,7 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             child: Stack(
               alignment: Alignment.center,
-              children: [
+              children: !isLoading ? [
                 //* PLAY SCREEN
                 AnimatedSlide(
                   offset: Offset(playScreenVisible ? 0 : -2 , 0), 
@@ -316,7 +339,31 @@ class _QuizScreenState extends State<QuizScreen> {
                     ),
                   ),
                 ),
-              ],
+              ] : [
+                  //*LOADING
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 72),
+                    child: const CupertinoActivityIndicator(
+                      animating: true,
+                      radius: 14,
+                    ),
+                  ),
+                  const Text(
+                    "Bạn đợi một chút xíu nhé...",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Color(0x40000000),
+                          blurRadius: 12,
+                          offset: Offset(0, 0),
+                        )
+                      ]
+                    ),
+                  ),
+                ],
             ),
           )
         )
