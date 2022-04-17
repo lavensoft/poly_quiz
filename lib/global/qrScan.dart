@@ -34,12 +34,15 @@ void qrScan(BuildContext context) async {
   });
 
   if(code.indexOf("gift_exchange") > -1) { //GIFT EXCHANGE
+    String params = code.split("/")[2];
+    List<String> paramsList = params.split("|");
+
     Navigator.pushNamedAndRemoveUntil(
       context, 
       "/gems_exchange", 
       (route) => false,
       arguments: {
-        "gems": int.parse(code.split("/")[2])
+        "values": paramsList
       }
     );
   }  

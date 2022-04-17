@@ -29,6 +29,7 @@ class GemsExchangeScreen extends StatefulWidget {
 class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
   bool isLoading = true;
   bool isNotEnoughGems = false;
+  int exchangedGems = 0;
 
   @override
   void initState() {
@@ -39,24 +40,48 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
   //*Update gems
   void _exchangeGems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var gems = prefs.getInt("gems");
+    var gems = prefs.getInt("gems") ?? 0;
+    List<String> values = widget.data["values"];
 
-    if(gems! >= widget.data["gems"]) {
-      var newGems = gems - widget.data["gems"];
-      
-      API.updateUserGems(newGems.toInt()).then((value) {
-        prefs.setInt("gems", newGems.toInt());
+    Future.forEach(values, (element) async{
+      var item = element.toString();
 
-        setState(() {
-          isLoading = false;
-        });
-      });
-    }else{
-      setState(() {
-        isNotEnoughGems = true;
-        isLoading = false;
-      });
-    }
+      if(isLoading) {
+        if(item.indexOf("-") > -1) {
+          int gemsFrom = int.parse(item.split("-")[0]);
+          int gemsTo = int.parse(item.split("-")[1]);
+
+          if(gems >= gemsFrom && gems <= gemsTo) {
+            var newGems = gems - gemsFrom;
+
+            await API.updateUserGems(newGems.toInt()).then((value) {
+              prefs.setInt("gems", newGems.toInt());
+
+              setState(() {
+                isLoading = false;
+                exchangedGems = gemsFrom;
+              });
+            });
+          }
+        }else if(gems >= int.parse(item)) {
+          var newGems = gems - int.parse(item);
+
+          await API.updateUserGems(newGems.toInt()).then((value) {
+            prefs.setInt("gems", newGems.toInt());
+
+            setState(() {
+              isLoading = false;
+              exchangedGems = int.parse(item);
+            });
+          });
+        }else{
+          setState(() {
+            isNotEnoughGems = true;
+            isLoading = false;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -104,7 +129,7 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  isNotEnoughGems ? "Bạn không đủ gems để nhận quà!" : "Bạn đã đổi ${widget.data["gems"]} gems để nhận quà!",
+                  isNotEnoughGems ? "Bạn không đủ gems để nhận quà!" : "Bạn đã đổi $exchangedGems gems để nhận quà!",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -148,7 +173,7 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
-                          value: -widget.data["gems"],
+                          value: -exchangedGems,
                         ),
                       ],
                     ),

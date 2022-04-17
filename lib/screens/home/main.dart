@@ -95,7 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
         child: Container(
           color: Colors.white,
           alignment: Alignment.center,
@@ -227,7 +226,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     height: 468,
                     child: _quizList.length > 0 ? ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.only(left: 48, right: 48),
                       scrollDirection: Axis.horizontal,
                       itemCount: _quizList.length,
