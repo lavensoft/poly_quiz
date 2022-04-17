@@ -129,7 +129,7 @@ class _CongrasScreenState extends State<CongrasScreen> {
         ),
         const SizedBox(height: 20),
         const Text(
-          "Bạn đợi một chút xíu nhé...",
+          "Bạn đợi một chút xíu nhe 🥳🥳",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

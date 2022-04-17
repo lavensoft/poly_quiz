@@ -11,7 +11,6 @@
  */
 
 import 'package:http/http.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "../../global/global.dart";
 import "dart:convert";
 import "package:shared_preferences/shared_preferences.dart";
@@ -61,12 +60,12 @@ const avatarsImage = [
 class API {
   static final Map<String, String> _headers = {
     "Content-Type": "application/json",
-    "w_api_key" : dotenv.env["W_API_KEY"]!,
-    //"api_key" : dotenv.env["API_KEY"]!,
-    "app_id" : dotenv.env["APP_ID"]!,
+    "w_api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
+    //"api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
+    "app_id" : "625453bc7b3cbb43d51602a3",
   };
 
-  static String apiUrl = "http://localhost:8080";
+  static String apiUrl = Global.DEBUG ? "http://localhost:8080" : "https://server.lavenes.com";
 
   //*USER API
   static Future addUser(String email, String name, String password) async {

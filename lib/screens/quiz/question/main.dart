@@ -53,7 +53,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         QuestionGroup(),
-        if(!isMobile(context)) const SizedBox(height: 24),
+        !isMobile(context) ? const SizedBox(height: 24) : const SizedBox(height: 40),
         AnswerGroup()
       ],
     );

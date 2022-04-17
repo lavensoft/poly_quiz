@@ -11,16 +11,15 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 //Screens
 import 'screens/home/main.dart';
 import "screens/quiz/main.dart";
 import "screens/auth/login/main.dart";
 import "screens/auth/signup/main.dart";
+import "screens/gemsExchange/main.dart";
 
 void main() async{
-  await dotenv.load(fileName: ".env"); //Load env
   runApp(const MyApp());
 }
 
@@ -51,8 +50,14 @@ class MyApp extends StatelessWidget {
         '/quiz/6259518e99f91815522a374f': (context) => QuizScreen(
           quizId: "6259518e99f91815522a374f",
         ),
+        '/quiz/625babc5e59853e00c93cf00': (context) => QuizScreen(
+          quizId: "625babc5e59853e00c93cf00",
+        ),
         '/quiz': (context) => QuizScreen(
           quizId: ModalRoute.of(context)!.settings.arguments as String,
+        ),
+        '/gems_exchange': (context) => GemsExchangeScreen(
+          data: ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>,
         ),
         '/': (context) => HomeScreen(),
       },

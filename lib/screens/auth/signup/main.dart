@@ -21,6 +21,10 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  String name = "";
+  String email = "";
+  String password = "";
+
   @override
   void initState() {
     super.initState();
@@ -32,10 +36,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-
     void _handleShowAlert (String title, String message) {
       showDialog(
         context: context,
@@ -57,19 +57,19 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     Future<void> _handleSignup() async {
-      bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
+      bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
 
-      if(_nameController.text.isEmpty || _emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      if(name.isEmpty || email.isEmpty || password.isEmpty) {
         _handleShowAlert("🙈", "Vui lòng nhập đầy đủ thông tin!");
       }else if(!emailValid) {
         _handleShowAlert("🙈", "Email không hợp lệ!");
-      }else if(_emailController.text.split("@")[1] != "fpt.edu.vn") {
+      }else if(email.split("@")[1] != "fpt.edu.vn") {
         _handleShowAlert("🙈", "Đây không phải là email của FPT!");
       }else{
         API.addUser(
-          _emailController.text,
-          _nameController.text,
-          _passwordController.text
+          email,
+          name,
+          password
         ).then((value) async{
           if(value["code"] == 200) {
             var userData = value["data"];
@@ -135,19 +135,31 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   const SizedBox(height: 48),
                   TextBox(
-                    hintText: "Họ & Tên",
-                    controller: _nameController,
+                    placeholder: "Họ & Tên",
+                    onChanged: (e) {
+                      setState(() {
+                        name = e;
+                      });
+                    },
                   ),
                   const SizedBox(height: 16),
                   TextBox(
-                    hintText: "Email",
-                    controller: _emailController,
+                    placeholder: "Email",
+                    onChanged: (e) {
+                      setState(() {
+                        email = e;
+                      });
+                    },
                   ),
                   const SizedBox(height: 16),
                   TextBox(
                     obscureText: true,
-                    hintText: "Mật khẩu",
-                    controller: _passwordController,
+                    placeholder: "Mật khẩu",
+                    onChanged: (e) {
+                      setState(() {
+                        password = e;
+                      });
+                    },
                   ),
                   const SizedBox(height: 48),
                   PrimaryButton(

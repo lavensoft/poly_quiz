@@ -253,9 +253,16 @@ class _DetailQuizCardState extends State<DetailQuizCard> {
               Container(
                 width: 50,
                 height: 50,
-                child: const CircleAvatar(
-                  backgroundColor: Colors.white,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white.withOpacity(.25)
                 ),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Image.network(
+                        widget.image,
+                    ),
+                )
               ),
               //*INFORMATION
               const SizedBox(width: 18),

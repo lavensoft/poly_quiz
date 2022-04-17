@@ -11,9 +11,11 @@
  */
 
 import "package:flutter/material.dart";
+import "package:jsqr/scanner.dart";
 import 'package:flutter/rendering.dart';
 import "package:quizz/lavenes.dart";
 import "../../global/global.dart";
+import "../../global/qrScan.dart";
 import "package:flutter_svg/svg.dart";
 import "dart:convert";
 import "package:shared_preferences/shared_preferences.dart";
@@ -46,8 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
     }else {
       API.getAllQuiz().then((value) {
+        var filteredData = value["data"];
+        filteredData.removeWhere((item) => item["status"] == "hidden");
+
         setState(() {
-          _quizList = value["data"];
+          _quizList = filteredData;
         });
       });
       
@@ -90,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Container(
           color: Colors.white,
           alignment: Alignment.center,
@@ -110,6 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         //*QR SCAN BUTTON
                         InkWell(
+                          onTap: () {
+                            qrScan(context);
+                          },
                           child: Container(
                             margin: const EdgeInsets.only(left: 24),
                             padding: const EdgeInsets.only(top: 16, right: 16, bottom: 16),
@@ -196,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Hi ${userData?["name"]} 👋",
+                          "Xin chào ${userData?["name"]} 👋",
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -204,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 3),
                         const Text(
-                          "Let's Play",
+                          "Quiz Nổi Bật",
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -217,8 +226,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   //*FEATURE QUIZ CONTAINER
                   Container(
                     height: 468,
-                    child: ListView.separated(
-                      padding: const EdgeInsets.only(left: 48),
+                    child: _quizList.length > 0 ? ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.only(left: 48, right: 48),
                       scrollDirection: Axis.horizontal,
                       itemCount: _quizList.length,
                       separatorBuilder: (context, index) => const SizedBox(width: 24),
@@ -236,6 +246,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         );
                       },
+                    ) : Center(
+                      child: Text(
+                        "Hiện tại app không có quiz",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black.withOpacity(.32)
+                        ),
+                      )
                     ),
                   ),
 
@@ -256,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Container(
                               margin: const EdgeInsets.only(left: 24),
                               child: const Text(
-                                "💡 Quiz of the day",
+                                "💡 Quiz trong ngày",
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w700,
@@ -266,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             //* DETAIL QUIZ CONTAINER
                             const SizedBox(height: 24),
-                            ListView.separated(
+                            _quizList.length > 0 ? ListView.separated(
                               padding: const EdgeInsets.only(left: 48, right: 48),
                               shrinkWrap: true,
                               separatorBuilder: (context, index) => const SizedBox(height: 24),
@@ -286,6 +305,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                 );
                               },
+                            )  : Center(
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 48, bottom: 48),
+                                child: Text(
+                                "Hiện tại app không có quiz",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black.withOpacity(.32)
+                                  ),
+                                ),
+                              )
                             ),
                           ],
                         ),
@@ -299,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             margin: const EdgeInsets.only(left: 24),
                             child: const Text(
-                              "💡 Thông tin thêm",
+                              "🏆 Thông tin thêm",
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
@@ -329,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          "Bạn đợi một chút xíu nhé...",
+                          "Bạn đợi một chút xíu nhé 😘",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -380,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text( //*TITLE
-                      "Rank",
+                      "Xếp Hạng",
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

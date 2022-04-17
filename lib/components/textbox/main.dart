@@ -1,11 +1,17 @@
 import "package:flutter/material.dart";
 
 class TextBox extends StatefulWidget {
-  TextBox({Key? key,required this.controller, this.hintText, this.obscureText = false}) : super(key: key);
+  TextBox({Key? key,
+    this.placeholder = '', 
+    this.obscureText = false,
+    this.controller,
+    this.onChanged
+  }) : super(key: key);
 
-  final TextEditingController controller;
-  final String? hintText;
+  final String placeholder;
   final bool obscureText;
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
 
   @override
   _TextBoxState createState() => _TextBoxState();
@@ -25,14 +31,18 @@ class _TextBoxState extends State<TextBox> {
         borderRadius: BorderRadius.circular(16)
       ),
       child: TextField(
-        obscureText: widget.obscureText,
+        onChanged: (e) {
+          widget.onChanged!(e);
+        },
+        autofillHints: [],
         controller: widget.controller,
+        obscureText: widget.obscureText,
         style: const TextStyle(
           fontSize: 14
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: widget.hintText,
+          hintText: widget.placeholder,
           hintStyle: const TextStyle(
             color: Color(0xFFBDBDBD),
             fontSize: 14,

@@ -39,7 +39,7 @@ dependencies:
   intl: ^0.17.0
   shared_preferences: ^2.0.13
   url_launcher: ^6.0.20
-  flutter_dotenv: ^5.0.2
+  jsqr: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -71,9 +71,6 @@ flutter:
 
     #*AVATARS IMAGES
     - assets/avatars/
-
-    #*ENV
-    - .env
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
