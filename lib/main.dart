@@ -38,6 +38,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/signup': (context) => SignupScreen(),
         '/login': (context) => LoginScreen(),
+        '/gift_exchange/650-699|700' : (context) => GemsExchangeScreen(
+          data: const {
+            "values" : ["650-699", "700"]
+          }
+        ),
         '/quiz/6259409d99f91815522a374c': (context) => QuizScreen(
           quizId: "6259409d99f91815522a374c",
         ),

@@ -45,5 +45,14 @@ void qrScan(BuildContext context) async {
         "values": paramsList
       }
     );
-  }  
+  }else if(code.indexOf("quiz") > -1) { //QUIZ
+    String quizId = code.split("#")[1].split("/")[2];
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      "/quiz",
+      (route) => false,
+      arguments: quizId
+    );
+  }
 }
