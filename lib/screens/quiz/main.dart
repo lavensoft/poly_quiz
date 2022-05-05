@@ -42,6 +42,7 @@ class _QuizScreenState extends State<QuizScreen> {
   bool endScreenVisible = false;
   bool loadingScreenVisible = false;
   bool isLoading = true;
+  bool isNotEnoughGems = false;
 
   //*QUESTION SCREEN
   int questionCountdown = 11;
@@ -95,6 +96,14 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       gems = prefs.getInt("gems") ?? 0;
     });
+
+    if(prefs.getInt("gems")! <= 0) {
+      setState(() {
+        congrasScreenVisible = true;
+        isNotEnoughGems = true;
+        playScreenVisible = false;
+      });
+    }
   }
 
   //*WHEN FINISH
@@ -223,7 +232,7 @@ class _QuizScreenState extends State<QuizScreen> {
     }
 
     void handleNextQuestion() {
-      if(questionIndex < questionData.length - 1 && !endScreenVisible) {
+      if(questionIndex < questionData.length - 1 && !endScreenVisible && !isNotEnoughGems) {
         setState(() {
           answerSelected = -1;
           answerWrong = false;
@@ -240,7 +249,7 @@ class _QuizScreenState extends State<QuizScreen> {
         Future.delayed(const Duration(milliseconds: 650), () {
           handleShowQuestion();
         });
-      }else if(!endScreenVisible) {
+      }else if(!endScreenVisible && !isNotEnoughGems) {
         setState(() {
           congrasScreenVisible = true;
           endScreenVisible = true;
@@ -333,6 +342,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       gems: gems,
                       endScreenVisible: endScreenVisible,
                       gemsAfterAnswer: gemsAfterAnswer,
+                      isNotEnoughGems: isNotEnoughGems,
                       onContinue: () {
                         handleNextQuestion();
                       },

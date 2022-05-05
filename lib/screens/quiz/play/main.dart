@@ -11,9 +11,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:quizz/lavenes.dart';
-import '../question/main.dart';
 
 class QuizPlayScreen extends StatefulWidget {
   QuizPlayScreen({Key? key, 

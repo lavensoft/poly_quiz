@@ -12,7 +12,6 @@
 
 import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
-import "package:flutter_svg/svg.dart";
 import "package:flutter/cupertino.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "../../global/api.dart";
@@ -47,31 +46,15 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
       var item = element.toString();
 
       if(isLoading) {
-        if(item.indexOf("-") > -1) {
-          int gemsFrom = int.parse(item.split("-")[0]);
-          int gemsTo = int.parse(item.split("-")[1]);
-
-          if(gems >= gemsFrom && gems <= gemsTo) {
-            var newGems = gems - gemsFrom;
-
-            await API.updateUserGems(newGems.toInt()).then((value) {
-              prefs.setInt("gems", newGems.toInt());
-
-              setState(() {
-                isLoading = false;
-                exchangedGems = gemsFrom;
-              });
-            });
-          }
-        }else if(gems >= int.parse(item)) {
-          var newGems = gems - int.parse(item);
+        if(gems >= 1000) {
+          var newGems = 0;
 
           await API.updateUserGems(newGems.toInt()).then((value) {
             prefs.setInt("gems", newGems.toInt());
 
             setState(() {
               isLoading = false;
-              exchangedGems = int.parse(item);
+              exchangedGems = gems;
             });
           });
         }else{
@@ -81,6 +64,45 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
           });
         }
       }
+
+      //   if(item.indexOf("-") > -1) {
+      //     int gemsFrom = int.parse(item.split("-")[0]);
+      //     int gemsTo = int.parse(item.split("-")[1]);
+
+      //     if(gems >= gemsFrom && gems <= gemsTo) {
+      //       //var newGems = gems - gemsFrom;
+
+      //       var newGems = 0;
+
+      //       await API.updateUserGems(newGems.toInt()).then((value) {
+      //         prefs.setInt("gems", newGems.toInt());
+
+      //         setState(() {
+      //           isLoading = false;
+      //           exchangedGems = gemsFrom;
+      //         });
+      //       });
+      //     }
+      //   }else if(gems >= int.parse(item)) {
+      //     //var newGems = gems - int.parse(item);
+
+      //     var newGems = 0;
+
+      //     await API.updateUserGems(newGems.toInt()).then((value) {
+      //       prefs.setInt("gems", newGems.toInt());
+
+      //       setState(() {
+      //         isLoading = false;
+      //         exchangedGems = int.parse(item);
+      //       });
+      //     });
+      //   }else{
+      //     setState(() {
+      //       isNotEnoughGems = true;
+      //       isLoading = false;
+      //     });
+      //   }
+      // }
     });
   }
 
@@ -158,8 +180,8 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
                         Container( //*Gems icon
                           width: 24,
                           height: 24,
-                          child: SvgPicture.asset(
-                            "assets/icons/gems.svg"
+                          child: Image.asset(
+                            "assets/icons/gems.png"
                           ),
                         ),
 

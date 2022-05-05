@@ -13,16 +13,16 @@
 import "package:flutter/material.dart";
 import "package:flutter/cupertino.dart";
 import "package:quizz/lavenes.dart";
-import "package:flutter_svg/svg.dart";
 
 class CongrasScreen extends StatefulWidget {
-  CongrasScreen({Key? key, required this.endScreenVisible, required this.onContinue, required this.gemsAfterAnswer, required this.gems, this.loading = false}) : super(key: key);
+  CongrasScreen({Key? key, required this.endScreenVisible, this.isNotEnoughGems = false, required this.onContinue, required this.gemsAfterAnswer, required this.gems, this.loading = false}) : super(key: key);
 
   final Function? onContinue;
   final int gemsAfterAnswer;
   final int gems;
   final bool endScreenVisible;
   final bool loading;
+  final bool isNotEnoughGems;
 
   @override
   _CongrasScreenState createState() => _CongrasScreenState();
@@ -37,7 +37,7 @@ class _CongrasScreenState extends State<CongrasScreen> {
       children: !widget.loading ? [
         //* TITLE
         Text(
-          widget.endScreenVisible ? (widget.gems > 0 ? "Bạn đã hoàn thành bài Quiz 🚀" : "Bạn đã thua cuộc vì đã hết số điểm 😭") :
+          widget.isNotEnoughGems ? "Bạn không còn đủ gems để chơi tiếp 😭" : widget.endScreenVisible ? (widget.gems > 0 ? "Bạn đã hoàn thành bài Quiz 🚀" : "Bạn đã thua cuộc vì đã hết số điểm 😭") :
           (widget.gemsAfterAnswer > 0 ? "Chúc Mừng 🎉" : "Bạn Đã Trả Lời Sai 🙁"),
           style: const TextStyle(
             fontSize: 24,
@@ -54,7 +54,7 @@ class _CongrasScreenState extends State<CongrasScreen> {
         ),
         const SizedBox(height: 10),
         Text(
-          widget.endScreenVisible ? (widget.gems > 0 ? "Bạn đã nhận được ${widget.gems} gems sau khi hoàn thành bài quiz này!" : "Bạn đã mất hết gems vì đã trả lời sai!" ) :
+          widget.isNotEnoughGems ? "" : widget.endScreenVisible ? (widget.gems > 0 ? "Bạn đã nhận được ${widget.gems} gems sau khi hoàn thành bài quiz này!" : "Bạn đã mất hết gems vì đã trả lời sai!" ) :
           "Bạn đã ${widget.gemsAfterAnswer > 0 ? "thắng" : "mất"} ${widget.gemsAfterAnswer} gems!",
           style: const TextStyle(
             fontSize: 16,
@@ -84,8 +84,8 @@ class _CongrasScreenState extends State<CongrasScreen> {
                 Container( //*Gems icon
                   width: 24,
                   height: 24,
-                  child: SvgPicture.asset(
-                    "assets/icons/gems.svg"
+                  child: Image.asset(
+                    "assets/icons/gems.png"
                   ),
                 ),
 
@@ -116,7 +116,7 @@ class _CongrasScreenState extends State<CongrasScreen> {
         //*CONTINUE BTN
         const SizedBox(height: 40),
         PrimaryButton(
-          label: widget.endScreenVisible ? "Trở về trang chủ" : "Tiếp tục", 
+          label: widget.endScreenVisible || widget.isNotEnoughGems ? "Trở về trang chủ" : "Tiếp tục", 
           onPressed: () {
             widget.onContinue!();
           }

@@ -12,7 +12,6 @@
 
 import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
-import "package:flutter_svg/svg.dart";
 import "../../../global/global.dart";
 
 class QuestionScreen extends StatefulWidget {
@@ -87,8 +86,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     Container( //*Gems icon
                       width: 24,
                       height: 24,
-                      child: SvgPicture.asset(
-                        "assets/icons/gems.svg"
+                      child: Image.asset(
+                        "assets/icons/gems.png"
                       ),
                     ),
                     const SizedBox(width: 8),

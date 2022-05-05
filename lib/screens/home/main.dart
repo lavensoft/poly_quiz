@@ -11,13 +11,9 @@
  */
 
 import "package:flutter/material.dart";
-import "package:jsqr/scanner.dart";
-import 'package:flutter/rendering.dart';
 import "package:quizz/lavenes.dart";
 import "../../global/global.dart";
 import "../../global/qrScan.dart";
-import "package:flutter_svg/svg.dart";
-import "dart:convert";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/cupertino.dart";
 
@@ -400,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Row(
               children: [
-                SvgPicture.asset("assets/icons/${Global.getUserRankBadge(
+                Image.asset("assets/icons/${Global.getUserRankBadge(
                   userRankNum,
                   rankTotal
                 )}", height: 40), //*ICON
@@ -437,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Row(
               children: [
-                SvgPicture.asset("assets/icons/gems.svg", height: 40), //*ICON
+                Image.asset("assets/icons/gems.png", height: 40), //*ICON
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
