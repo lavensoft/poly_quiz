@@ -14,7 +14,7 @@ export "api.dart";
 export "func.dart";
 
 class Global {
-  static final bool DEBUG = false;
+  static final bool DEBUG = true;
   //*RANKING
   static List<String> rankBadges = [
     "diamondRank.png",

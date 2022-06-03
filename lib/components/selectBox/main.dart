@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import "../../global/func.dart";
 
 class TextSelectBox extends StatefulWidget {
-  TextSelectBox({Key? key, required this.label, required this.onPressed, this.wrong = false, this.correct = false , this.selected = false}) : super(key: key);
+  TextSelectBox({Key? key, required this.label, required this.onPressed, this.isEmoji = false, this.wrong = false, this.correct = false , this.selected = false}) : super(key: key);
 
   final String label;
   final VoidCallback onPressed;
   final bool selected;
   final bool correct;
   final bool wrong;
+  final bool isEmoji;
 
   @override
   _TextSelectBoxState createState() => _TextSelectBoxState();
@@ -49,9 +50,14 @@ class _TextSelectBoxState extends State<TextSelectBox> {
           onTap: widget.onPressed,
           child: Center(
             child: Container(
-              padding: EdgeInsets.only(left: isMobile(context) ? 24 : 48, right: isMobile(context) ? 24 : 48, top: isMobile(context) ? 20 : 16, bottom: isMobile(context) ? 20 : 16),
+              padding: EdgeInsets.only(
+                left: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 24 : 48), 
+                right: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 24 : 48), 
+                top: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 20 : 16), 
+                bottom: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 20 : 16)
+              ),
               child: Text(title, style: TextStyle(
-                fontSize: 15,
+                fontSize: widget.isEmoji ? 20 : 15,
                 color: widget.selected || widget.correct || widget.wrong ? Colors.white : const Color(0xFF06b5d8),
                 fontWeight: FontWeight.w600,
                 shadows: widget.selected ? [

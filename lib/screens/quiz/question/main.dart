@@ -142,11 +142,69 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   //*ANSWER GROUP
   Widget AnswerGroup() {
+    bool isEmoji = widget.questionData["isEmoji"] ?? false;
+    
     return ConstrainedBox(
       constraints: const BoxConstraints(
         maxWidth: 500
       ),
-      child: 
+      child: isEmoji ?
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextSelectBox(
+            label: "☹", 
+            isEmoji: isEmoji,
+            onPressed: () {
+              handleAnswer(0);
+            },
+            selected: widget.answerSelected == 0,
+            correct: widget.answerCorrect && widget.answerSelected == 0,
+            wrong: widget.answerWrong && widget.answerSelected == 0 || widget.answerWrong && widget.answerSelected == -1,
+          ),
+          TextSelectBox(
+            label: "😐", 
+            isEmoji: isEmoji,
+            onPressed: () {
+              handleAnswer(1);
+            },
+            selected: widget.answerSelected == 1,
+            correct: widget.answerCorrect && widget.answerSelected == 1,
+            wrong: widget.answerWrong && widget.answerSelected == 1 || widget.answerWrong && widget.answerSelected == -1,
+          ),
+          TextSelectBox(
+            label: "🙂", 
+            isEmoji: isEmoji,
+            onPressed: () {
+              handleAnswer(2);
+            },
+            selected: widget.answerSelected == 2,
+            correct: widget.answerCorrect && widget.answerSelected == 2,
+            wrong: widget.answerWrong && widget.answerSelected == 2 || widget.answerWrong && widget.answerSelected == -1,
+          ),
+          TextSelectBox(
+            label: "😀", 
+            isEmoji: isEmoji,
+            onPressed: () {
+              handleAnswer(3);
+            },
+            selected: widget.answerSelected == 3,
+            correct: widget.answerCorrect && widget.answerSelected == 3,
+            wrong: widget.answerWrong && widget.answerSelected == 1 || widget.answerWrong && widget.answerSelected == -1,
+          ),
+          TextSelectBox(
+            label: "🥰", 
+            isEmoji: isEmoji,
+            onPressed: () {
+              handleAnswer(4);
+            },
+            selected: widget.answerSelected == 4,
+            correct: widget.answerCorrect && widget.answerSelected == 4,
+            wrong: widget.answerWrong && widget.answerSelected == 1 || widget.answerWrong && widget.answerSelected == -1,
+          )
+        ],
+      ) :
       ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
