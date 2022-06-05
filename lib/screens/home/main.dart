@@ -16,6 +16,7 @@ import "../../global/global.dart";
 import "../../global/qrScan.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/cupertino.dart";
+import "../../api/main.dart";
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if(prefs.getString("email") == null || prefs.getString("name") == null || prefs.getString("userId") == null) {
       Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
     }else {
-      API.getAllQuiz().then((value) {
+      QuizAPI.getAll().then((value) {
         var filteredData = value["data"];
         filteredData.removeWhere((item) => item["status"] == "hidden");
 
@@ -52,23 +53,30 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       });
       
-      API.getUserData().then((value) {
-        prefs.setInt("gems", value["usrData"]["gems"]);
+      UserAPI.getUserData().then((value) {
+        prefs.setInt("gems", value["data"]["gems"]);
         
         setState(() {
           userData = value;
         });
       });
 
-      API.getUserQuizRank().then((value) {
-        setState(() {
-          userRanking = "${value["data"]["rank"]}/${value["data"]["total"]}";
-          userRankNum = value["data"]["rank"];
-          rankTotal = value["data"]["total"];
-
-          isLoading = false;
-        });
+      setState(() {
+        isLoading = false;
       });
+
+      isLoading = false;
+
+      // QuizAPI.getUserQuizRank().then((value) {
+      //   //!TODO
+      //   setState(() {
+      //     userRanking = "${value["data"]["rank"]}/${value["data"]["total"]}";
+      //     userRankNum = value["data"]["rank"];
+      //     rankTotal = value["data"]["total"];
+
+      //     isLoading = false;
+      //   });
+      // });
     }
   }
 
@@ -448,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text( //*VALUE
-                      userData?["usrData"]["gems"].toString() ?? "0",
+                      userData?["data"]["gems"].toString() ?? "0",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,

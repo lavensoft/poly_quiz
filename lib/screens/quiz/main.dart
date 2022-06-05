@@ -19,6 +19,7 @@ import "./question/main.dart";
 import "./congras/main.dart";
 import "../../global/global.dart";
 import "dart:async";
+import "../../api/main.dart";
 
 class QuizScreen extends StatefulWidget {
   QuizScreen({Key? key, required this.quizId}) : super(key : key);
@@ -68,7 +69,7 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
 
-    API.getSingleQuiz(widget.quizId).then((result) {
+    QuizAPI.getQuizData(widget.quizId).then((result) {
       var argQuizData = result["data"];
       var argQuestionsData = argQuizData["questions"];
 
@@ -109,13 +110,13 @@ class _QuizScreenState extends State<QuizScreen> {
   //*WHEN FINISH
   void _handleFinishGame() async{
     //* Update user gems
-    await API.updateUserGems(gems);
+    await UserAPI.updateGems(gems);
 
     //*Update user answers
     int index = 0;
 
     await Future.forEach(userAnswers, (element) async {
-      await API.addQuizAnswers(quizData["_id"], questionData[index]["id"], int.parse(element.toString())).then((value) {
+      await QuizAPI.addQuizAnswer(quizData["_id"], questionData[index]["id"], int.parse(element.toString())).then((value) {
         if(value["code"] == 200) {
           index++;
         }

@@ -37,6 +37,7 @@ dependencies:
   flutter_svg: ^1.0.3
   http: ^0.13.4
   intl: ^0.17.0
+  provider: ^6.0.2
   shared_preferences: ^2.0.13
   url_launcher: ^6.0.20
   jsqr: ^0.1.1

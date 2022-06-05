@@ -13,7 +13,7 @@
 import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "../../../global/global.dart";
+import "../../../api/main.dart";
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -66,13 +66,15 @@ class _SignupScreenState extends State<SignupScreen> {
       }else if(email.split("@")[1] != "fpt.edu.vn") {
         _handleShowAlert("🙈", "Đây không phải là email của FPT!");
       }else{
-        API.addUser(
+        UserAPI.add(
           email,
           name,
           password
         ).then((value) async{
           if(value["code"] == 200) {
             var userData = value["data"];
+
+            print(userData["avatar"]);
 
             final prefs = await SharedPreferences.getInstance();
 
@@ -88,9 +90,10 @@ class _SignupScreenState extends State<SignupScreen> {
             prefs.setString("avatar", userData["avatar"]);
             prefs.setString("name", userData["name"]);
             prefs.setString("email", userData["email"]);
-            prefs.setInt("gems", userData["usrData"]["gems"]);
+            prefs.setInt("gems", userData["data"]["gems"]);
             prefs.setString("userId", userData["_id"]);
             prefs.setString("companyId", userData["companyId"]);
+            prefs.setString("token", userData["accessToken"]);
 
             Navigator.of(context).pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
           }else{

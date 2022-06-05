@@ -13,7 +13,7 @@
 import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "../../../global/global.dart";
+import "../../../api/main.dart";
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -72,17 +72,18 @@ class _LoginScreenState extends State<LoginScreen> {
       }else if(email.split("@")[1] != "fpt.edu.vn") {
         _handleShowAlert("📬", "Đây không phải là email của FPT!");
       }else{
-        API.authUser(email, password).then((value) {
+        UserAPI.auth(email, password).then((value) {
           if(value["code"] == 200) {
             var userData = value["data"];
             
             //Set data
-            prefs.setString("avatar", userData["avatar"]);
+            prefs.setString("avatar", "");
             prefs.setString("name", userData["name"]);
             prefs.setString("email", userData["email"]);
-            prefs.setInt("gems", userData["usrData"]["gems"]);
+            prefs.setInt("gems", userData["data"]["gems"]);
             prefs.setString("userId", userData["_id"]);
             prefs.setString("companyId", userData["companyId"]);
+            prefs.setString("token", userData["accessToken"]);
     
             Navigator.pushReplacementNamed(context, "/");
           }else{

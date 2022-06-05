@@ -14,7 +14,7 @@ import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "package:flutter/cupertino.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "../../global/api.dart";
+import "../../api/main.dart";
 
 class GemsExchangeScreen extends StatefulWidget {
   GemsExchangeScreen({Key? key, required this.data}) : super(key: key);
@@ -49,7 +49,7 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
         if(gems >= 1000) {
           var newGems = 0;
 
-          await API.updateUserGems(newGems.toInt()).then((value) {
+          await UserAPI.updateGems(newGems.toInt()).then((value) {
             prefs.setInt("gems", newGems.toInt());
 
             setState(() {

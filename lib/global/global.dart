@@ -10,7 +10,6 @@
  * Lavenes.
  */
 
-export "api.dart";
 export "func.dart";
 
 class Global {
