@@ -34,6 +34,9 @@ class _QuizScreenState extends State<QuizScreen> {
   var quizData;
   var questionData;
   List<int> userAnswers = [];
+  bool showCongras = true;
+  bool loop = false;
+  int countTime = 10;
 
   //*SCREEN VISIBLE
   bool playScreenVisible = true;
@@ -84,6 +87,9 @@ class _QuizScreenState extends State<QuizScreen> {
         questionData = argQuestionsData;
         gemsBet = argQuestionsData[0]["score"].toInt(); //*Set score per question
         isLoading = false;
+        showCongras = result["data"]["moreData"]["showCongras"] ?? true;
+        loop = result["data"]["moreData"]["loop"] ?? false;
+        countTime = result["data"]["time"] > -1 ? result["data"]["time"] : -1;
       });
     });
 
@@ -109,7 +115,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   //*WHEN FINISH
   void _handleFinishGame() async{
-    //* Update user gems
+    //* Update user gems 
     await UserAPI.updateGems(gems);
 
     //*Update user answers
@@ -127,7 +133,28 @@ class _QuizScreenState extends State<QuizScreen> {
       loadingScreenVisible = false;
     });
 
-    Navigator.pushReplacementNamed(context, "/");
+    if(loop) {
+      setState(() {
+        questionIndex = 0;
+        gemsBet = questionData[0]["score"];
+        betSelected = -1;
+        betScreenVisible = false;
+        playScreenVisible = false;
+        isWaitingQuestion = false;
+        answerSelected = -1;
+        answerWrong = false;
+        answerCorrect = false;
+        questionScreenVisible=true;
+        userAnswers = [];
+        // countDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        //   setState(() {
+        //     questionCountdown--;
+        //   });
+        // });
+      });
+    }else{
+      Navigator.pushReplacementNamed(context, "/");
+    }
   }
 
   @override
@@ -147,13 +174,29 @@ class _QuizScreenState extends State<QuizScreen> {
       Future.delayed(const Duration(milliseconds: 500), () {
         setState(() {
           gems = gems + value;
-          if((gems + value) > 0) congrasScreenVisible = true;
-          if((gems + value) <= 0 || questionIndex >= questionData.length - 1) {
-            congrasScreenVisible = true;
-            endScreenVisible = true;
+          if((gems + value) > 0 && !loop) {
+            congrasScreenVisible = showCongras;
           }
-          questionScreenVisible = false;
-          questionCountdown = 11;
+          if((gems + value) <= 0 || questionIndex >= questionData.length - 1) {
+            if(!showCongras || loop) {
+              setState(() {
+                loadingScreenVisible = true;
+              });
+
+              _handleFinishGame();
+            }else{
+              if(!loop) {
+                congrasScreenVisible = showCongras;
+                endScreenVisible = showCongras;
+              }
+            }
+
+            questionScreenVisible = loop;
+            questionCountdown = countTime;
+          }else{
+            questionScreenVisible = false;
+            questionCountdown = countTime;
+          }
         });
       });
     }
@@ -169,7 +212,7 @@ class _QuizScreenState extends State<QuizScreen> {
           userAnswers = tUserAnswers;
         });
 
-        countDownTimer!.cancel();
+        countDownTimer?.cancel();
 
         Future.delayed(const Duration(seconds: 1), () {
           if(questionData[questionIndex]["correct"].indexOf(index) > -1) {
@@ -207,20 +250,25 @@ class _QuizScreenState extends State<QuizScreen> {
     }
 
     void handleShowQuestion() {
-      Timer newCountDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        setState(() {
-          questionCountdown --;
+      if(countTime > -1) {
+        Timer newCountDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          setState(() {
+            questionCountdown --;
+          });
+
+          if(questionCountdown <= 0) {
+              timer.cancel();
+              handleAnswer(-2);
+          }
         });
 
-        if(questionCountdown <= 0) {
-            timer.cancel();
-            handleAnswer(-2);
-        }
-      });
+        setState(() {
+          questionCountdown = countTime;
+          countDownTimer = newCountDownTimer;
+        });
+      } 
 
       setState(() {
-        questionCountdown = 11;
-        countDownTimer = newCountDownTimer;
         questionScreenVisible = true;
       });
     }
@@ -317,6 +365,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     opacity: questionScreenVisible ? 1 : 0,
                     duration: const Duration(milliseconds: 750),
                     child: QuestionScreen(
+                      countTime: countTime,
                       questionData: questionData[questionIndex],
                       questionCountdown: questionCountdown,
                       answerWrong: answerWrong,

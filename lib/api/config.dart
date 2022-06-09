@@ -20,5 +20,5 @@ class APIConfig {
     "app_id" : "625453bc7b3cbb43d51602a3",
   };
 
-  static String API = Global.DEBUG ? "http://localhost:8082/api/v1" : "https://server.lavenes.com";
+  static String API = Global.DEBUG ? "http://localhost:8085/api/v1" : "https://server.lavenes.com:8085/api/v1";
 }

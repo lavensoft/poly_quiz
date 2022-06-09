@@ -24,9 +24,11 @@ class QuestionScreen extends StatefulWidget {
     required this.questionData,
     required this.questionProgress,
     required this.gems,
+    required this.countTime,
     }) : super(key: key);
 
   final int questionCountdown;
+  final int countTime;
   final int answerSelected;
   final bool answerWrong;
   final bool answerCorrect;
@@ -80,7 +82,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           //*Control container
           Row( //*Information
             children: [
-              Expanded(
+              (widget.questionData["showGems"] ?? true) ? Expanded(
                 child: Row(
                   children: [
                     Container( //*Gems icon
@@ -101,21 +103,21 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     )
                   ],
                 )
-              ),
+              ) : Container(),
               //*Time label
-              AnimatedFlipCounter(
-                duration: const Duration(milliseconds: 500),
-                textStyle: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14
+              if(widget.countTime > -1) AnimatedFlipCounter(
+                  duration: const Duration(milliseconds: 500),
+                  textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14
+                  ),
+                  value: widget.questionCountdown,
                 ),
-                value: widget.questionCountdown,
-              ),
             ],
           ),
-          const SizedBox(height: 16),
-          ProgressBar(
+          if(widget.questionData["showProgress"] ?? true) const SizedBox(height: 16),
+          if(widget.questionData["showProgess"] ?? true) ProgressBar(
             percentage: widget.questionProgress,
           ),
 
@@ -149,9 +151,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
         maxWidth: 500
       ),
       child: isEmoji ?
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      Wrap(
+        spacing: 5,
         children: [
           TextSelectBox(
             label: "☹", 

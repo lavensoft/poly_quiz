@@ -18,7 +18,7 @@ import "../config.dart";
 
 class QuizAPI {
   static Future getAll() async{
-    Response response = await get(Uri.parse("${APIConfig.API}/quizzes"), headers: APIConfig.HEADERS);
+    Response response = await get(Uri.parse("${APIConfig.API}/quizzes/category/629d8d6b20082976d13c9f43"), headers: APIConfig.HEADERS);
     return json.decode(response.body);
   }
 
@@ -42,10 +42,7 @@ class QuizAPI {
       "answer" : answer,
       "userId" : prefs.getString("userId"),
       "quizId" : quizId,
-    })), headers: {
-      ...APIConfig.HEADERS,
-      "authorization" : prefs.getString("token") ?? ""
-    });
+    })), headers: APIConfig.HEADERS);
 
     return json.decode(response.body);
   }

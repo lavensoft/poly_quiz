@@ -12,6 +12,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     undefined_prefixed_name: ignore
+    strong_mode_down_cast_composite: ignore
 
 linter:
   # The lint rules applied to this project can be customized in the

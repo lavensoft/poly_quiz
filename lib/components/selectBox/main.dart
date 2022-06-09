@@ -20,7 +20,12 @@ class _TextSelectBoxState extends State<TextSelectBox> {
   Widget build(BuildContext context) {
     String title = widget.label;
     
-    return Container(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 56
+      ),
+      child: Container(
+      height: widget.isEmoji ? 56 : null,
       decoration: BoxDecoration(
         color: Colors.white,
         gradient: widget.selected || widget.correct || widget.wrong ? LinearGradient(
@@ -51,10 +56,10 @@ class _TextSelectBoxState extends State<TextSelectBox> {
           child: Center(
             child: Container(
               padding: EdgeInsets.only(
-                left: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 24 : 48), 
-                right: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 24 : 48), 
-                top: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 20 : 16), 
-                bottom: widget.isEmoji ? (isMobile(context) ? 24 : 24) : (isMobile(context) ? 20 : 16)
+                left: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
+                right: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
+                top: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 20 : 8), 
+                bottom: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 20 : 8)
               ),
               child: Text(title, style: TextStyle(
                 fontSize: widget.isEmoji ? 20 : 15,
@@ -71,7 +76,7 @@ class _TextSelectBoxState extends State<TextSelectBox> {
             ),
           )),
       ),
-    );
+    ));
   }
 }
 
@@ -101,64 +106,64 @@ class _ImageSelectBoxState extends State<ImageSelectBox> {
     return Stack(
       children: [
         Container(
-          margin: const EdgeInsets.only(top: 9),
-          width: btnWidth,
-          height: btnHeight - 6,
-          decoration: BoxDecoration(
-            color: Color(widget.selected ? 0xFF84D8FF : 0xFFE5E5E5),
-            borderRadius: BorderRadius.circular(16)
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: isTapped ? 3 : 0),
-          width: btnWidth,
-          child: GestureDetector(
-              onTapDown: (e) {
-                setState(() {
-                  isTapped = true;
-                });
-
-                widget.onPressed();
-              }, 
-              onTapUp: (e) {
-                setState(() {
-                  isTapped = false;
-                });
-              },
-              child: Container(
-                  height: btnHeight,
-                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(widget.selected ? 0xFF84D8FF: 0xFFE5E5E5), width: 2),
-                    borderRadius: BorderRadius.circular(16),
-                    color: Color(widget.selected ? 0xFFDCF3FF : 0xFFFFFFFF)
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: btnWidth,
-                        height: btnHeight - 64,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          image: DecorationImage(
-                            image: widget.image,
-                            fit: BoxFit.cover
-                          )
-                        ),
-                      ),
-                      Text(title, textAlign: TextAlign.center, style: TextStyle(
-                        color: Color(widget.selected ? 0xFF1899D6 : 0xFF4B4B4B),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                      )
-                    )
-                  ],
-                ),
-              )
+            margin: const EdgeInsets.only(top: 9),
+            width: btnWidth,
+            height: btnHeight - 6,
+            decoration: BoxDecoration(
+              color: Color(widget.selected ? 0xFF84D8FF : 0xFFE5E5E5),
+              borderRadius: BorderRadius.circular(16)
             ),
-        )
-      ],
-    );
+          ),
+          Container(
+            margin: EdgeInsets.only(top: isTapped ? 3 : 0),
+            width: btnWidth,
+            child: GestureDetector(
+                onTapDown: (e) {
+                  setState(() {
+                    isTapped = true;
+                  });
+
+                  widget.onPressed();
+                }, 
+                onTapUp: (e) {
+                  setState(() {
+                    isTapped = false;
+                  });
+                },
+                child: Container(
+                    height: btnHeight,
+                    padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(widget.selected ? 0xFF84D8FF: 0xFFE5E5E5), width: 2),
+                      borderRadius: BorderRadius.circular(16),
+                      color: Color(widget.selected ? 0xFFDCF3FF : 0xFFFFFFFF)
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: btnWidth,
+                          height: btnHeight - 64,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: DecorationImage(
+                              image: widget.image,
+                              fit: BoxFit.cover
+                            )
+                          ),
+                        ),
+                        Text(title, textAlign: TextAlign.center, style: TextStyle(
+                          color: Color(widget.selected ? 0xFF1899D6 : 0xFF4B4B4B),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                        )
+                      )
+                    ],
+                  ),
+                )
+              ),
+          )
+        ],
+      );
   }
 }
