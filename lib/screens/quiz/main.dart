@@ -36,6 +36,8 @@ class _QuizScreenState extends State<QuizScreen> {
   List<int> userAnswers = [];
   bool showCongras = true;
   bool loop = false;
+  bool showGems = true;
+  bool showProgress = false;
   int countTime = 10;
 
   //*SCREEN VISIBLE
@@ -88,6 +90,8 @@ class _QuizScreenState extends State<QuizScreen> {
         gemsBet = argQuestionsData[0]["score"].toInt(); //*Set score per question
         isLoading = false;
         showCongras = result["data"]["moreData"]["showCongras"] ?? true;
+        showGems = result["data"]["moreData"]["showGems"] ?? true;
+        showProgress = result["data"]["moreData"]["showProgress"] ?? false;
         loop = result["data"]["moreData"]["loop"] ?? false;
         countTime = result["data"]["time"] > -1 ? result["data"]["time"] : -1;
       });
@@ -371,6 +375,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       answerWrong: answerWrong,
                       answerCorrect: answerCorrect,
                       answerSelected: answerSelected,
+                      showGems: showGems,
+                      showProgress: showProgress,
                       gems: gems,
                       questionProgress: questionIndex / (questionData.length - 1),
                       onAnswer: (index) {

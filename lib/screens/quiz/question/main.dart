@@ -25,6 +25,8 @@ class QuestionScreen extends StatefulWidget {
     required this.questionProgress,
     required this.gems,
     required this.countTime,
+    this.showGems = true,
+    this.showProgress = true,
     }) : super(key: key);
 
   final int questionCountdown;
@@ -32,6 +34,8 @@ class QuestionScreen extends StatefulWidget {
   final int answerSelected;
   final bool answerWrong;
   final bool answerCorrect;
+  final bool showGems;
+  final bool showProgress;
   final dynamic questionData;
   final double questionProgress;
   final int gems;
@@ -62,6 +66,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   //*QUESTION GROUP
   Widget QuestionGroup() {
+    print(widget.questionData);
     return Container(
       width: 640,
       margin: const EdgeInsets.only(top: 16),
@@ -82,7 +87,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           //*Control container
           Row( //*Information
             children: [
-              (widget.questionData["showGems"] ?? true) ? Expanded(
+              (widget.questionData["showGems"]) ? Expanded(
                 child: Row(
                   children: [
                     Container( //*Gems icon
@@ -116,8 +121,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 ),
             ],
           ),
-          if(widget.questionData["showProgress"] ?? true) const SizedBox(height: 16),
-          if(widget.questionData["showProgess"] ?? true) ProgressBar(
+          if(widget.showProgress) const SizedBox(height: 16),
+          if(widget.showProgress) ProgressBar(
             percentage: widget.questionProgress,
           ),
 
