@@ -42,6 +42,7 @@ class QuizAPI {
       "answer" : answer,
       "userId" : prefs.getString("userId"),
       "quizId" : quizId,
+      "dateCreated": DateTime.now().toString()
     })), headers: APIConfig.HEADERS);
 
     return json.decode(response.body);

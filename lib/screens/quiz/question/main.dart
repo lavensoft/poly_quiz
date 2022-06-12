@@ -66,7 +66,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   //*QUESTION GROUP
   Widget QuestionGroup() {
-    print(widget.questionData);
     return Container(
       width: 640,
       margin: const EdgeInsets.only(top: 16),
@@ -87,7 +86,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           //*Control container
           Row( //*Information
             children: [
-              (widget.questionData["showGems"]) ? Expanded(
+              (widget.showGems) ? Expanded(
                 child: Row(
                   children: [
                     Container( //*Gems icon
@@ -127,6 +126,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
           ),
 
           //*QUESTION CONTAINER
+          if(widget.questionData["image"] != null) ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxHeight: 128
+            ),
+            child: Image.network(
+              widget.questionData["image"],
+            ),
+          ),
           const SizedBox(height: 32),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +167,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         spacing: 5,
         children: [
           TextSelectBox(
-            label: "☹", 
+            label: "😟", 
             isEmoji: isEmoji,
             onPressed: () {
               handleAnswer(0);

@@ -58,8 +58,8 @@ class _TextSelectBoxState extends State<TextSelectBox> {
               padding: EdgeInsets.only(
                 left: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
                 right: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
-                top: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 20 : 8), 
-                bottom: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 20 : 8)
+                top: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 14 : 14), 
+                bottom: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 14 : 14)
               ),
               child: Text(title, style: TextStyle(
                 fontSize: widget.isEmoji ? 20 : 15,

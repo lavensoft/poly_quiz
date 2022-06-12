@@ -37,7 +37,7 @@ class _QuizScreenState extends State<QuizScreen> {
   bool showCongras = true;
   bool loop = false;
   bool showGems = true;
-  bool showProgress = false;
+  bool showProgress = true;
   int countTime = 10;
 
   //*SCREEN VISIBLE
@@ -91,7 +91,7 @@ class _QuizScreenState extends State<QuizScreen> {
         isLoading = false;
         showCongras = result["data"]["moreData"]["showCongras"] ?? true;
         showGems = result["data"]["moreData"]["showGems"] ?? true;
-        showProgress = result["data"]["moreData"]["showProgress"] ?? false;
+        showProgress = result["data"]["moreData"]["showProgress"] ?? true;
         loop = result["data"]["moreData"]["loop"] ?? false;
         countTime = result["data"]["time"] > -1 ? result["data"]["time"] : -1;
       });
