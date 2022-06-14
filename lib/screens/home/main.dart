@@ -14,6 +14,7 @@ import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "../../global/global.dart";
 //import "../../global/qrScan.dart";
+import 'package:url_launcher/url_launcher.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/cupertino.dart";
 import "../../api/main.dart";
@@ -166,6 +167,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                   icon: const Icon(Icons.safety_divider, color: Colors.transparent),
                                   itemBuilder: (context) {
                                      List<PopupMenuEntry<Object>> list =[];
+
+                                    list.add(
+                                      PopupMenuItem(
+                                        onTap: () async{
+                                          const url = 'https://privacy.lavenes.com/beehero.html';
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw 'Could not launch $url';
+                                          }
+                                        },
+                                        child: const Text(
+                                          "Chính sách dữ liệu",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500
+                                          ),
+                                        )
+                                      )
+                                    );
 
                                     list.add(
                                       PopupMenuItem(

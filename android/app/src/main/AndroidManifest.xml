@@ -2,11 +2,16 @@
     package="com.example.quizz">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- OPTIONAL PERMISSIONS, REMOVE WHATEVER YOU DO NOT NEED -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- These require runtime permissions on M -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
    <application
-        android:label="Poly Quizz"
+        android:label="Bee Hero"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

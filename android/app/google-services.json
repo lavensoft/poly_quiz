@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "811915506709",
+    "project_id": "poly-quiz-12e78",
+    "storage_bucket": "poly-quiz-12e78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811915506709:android:01ab740f0aea2f1aaa4a1c",
+        "android_client_info": {
+          "package_name": "com.lavenes.quizz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811915506709-kkqq12atsttd40opk2260eal7p7upse9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-E0lb6tv-8jJX609Tax0MFtV6fAZQcgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811915506709-kkqq12atsttd40opk2260eal7p7upse9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "811915506709-2tu9j8j21979ei4vr6mvd1avurnknr5p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lavenes.quiz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -74,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
           if(value["code"] == 200) {
             var userData = value["data"];
 
-            print(userData["avatar"]);
+            print(userData);
 
             final prefs = await SharedPreferences.getInstance();
 
