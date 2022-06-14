@@ -73,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _handleShowAlert("📬", "Đây không phải là email của FPT!");
       }else{
         UserAPI.auth(email, password).then((value) {
+          print(value);
           if(value["code"] == 200) {
             var userData = value["data"];
             
@@ -87,9 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
     
             Navigator.pushReplacementNamed(context, "/");
           }else{
-            if(value["message"] == "PASSWORD_NOT_MATCH") {
+            if(value["message"] == "Invalid password") {
               _handleShowAlert("🔒", "Mật khẩu không đúng!");
-            }else if(value["message"] == "EMAIL_NOT_FOUND") {
+            }else if(value["message"] == "User not found") {
               _handleShowAlert("💌", "Email không tồn tại!");
             }
           }

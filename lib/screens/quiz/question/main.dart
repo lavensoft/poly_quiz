@@ -58,7 +58,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         QuestionGroup(),
-        !isMobile(context) ? const SizedBox(height: 24) : const SizedBox(height: 40),
+        !isMobile(context) ? const SizedBox(height: 24) : SizedBox(height: (widget.questionData["isEmoji"] ?? false) ? 12 : 0),
         AnswerGroup()
       ],
     );
@@ -165,6 +165,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
       child: isEmoji ?
       Wrap(
         spacing: 5,
+        runSpacing: 5,
         children: [
           TextSelectBox(
             label: "😟", 

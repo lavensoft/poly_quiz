@@ -11,6 +11,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 //Screens
 import 'screens/home/main.dart';
@@ -18,8 +19,20 @@ import "screens/quiz/main.dart";
 import "screens/auth/login/main.dart";
 import "screens/auth/signup/main.dart";
 import "screens/gemsExchange/main.dart";
+import "screens/qrScan/main.dart";
 
 void main() async{
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white, // navigation bar color
+      statusBarColor: Colors.white, // status bar color
+      statusBarBrightness: Brightness.dark,//status bar brigtness
+      statusBarIconBrightness:Brightness.dark , //status barIcon Brightness
+      systemNavigationBarDividerColor: Colors.white,//Navigation bar divider color
+      systemNavigationBarIconBrightness: Brightness.light, //navigation bar icon 
+    )
+  );
+  
   runApp(const MyApp());
 }
 
@@ -38,6 +51,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/signup': (context) => SignupScreen(),
         '/login': (context) => LoginScreen(),
+        '/qr_scan': (context) => QRScanView(),
         '/gift_exchange/650-699|700' : (context) => GemsExchangeScreen(
           data: const {
             "values" : ["650-699", "700"]

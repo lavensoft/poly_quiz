@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.0.13
   url_launcher: ^6.0.20
   jsqr: ^0.1.1
+  qr_code_scanner: ^1.0.0
 
 dev_dependencies:
   flutter_test:

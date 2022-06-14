@@ -13,7 +13,7 @@
 import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "../../global/global.dart";
-import "../../global/qrScan.dart";
+//import "../../global/qrScan.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/cupertino.dart";
 import "../../api/main.dart";
@@ -61,22 +61,15 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       });
 
-      setState(() {
-        isLoading = false;
+      QuizAPI.getUserQuizRank().then((value) {
+        setState(() {
+          userRanking = "${value["data"]["rank"]}/${value["data"]["total"]}";
+          userRankNum = value["data"]["rank"];
+          rankTotal = value["data"]["total"];
+
+          isLoading = false;
+        });
       });
-
-      isLoading = false;
-
-      // QuizAPI.getUserQuizRank().then((value) {
-      //   //!TODO
-      //   setState(() {
-      //     userRanking = "${value["data"]["rank"]}/${value["data"]["total"]}";
-      //     userRankNum = value["data"]["rank"];
-      //     rankTotal = value["data"]["total"];
-
-      //     isLoading = false;
-      //   });
-      // });
     }
   }
 
@@ -120,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //*QR SCAN BUTTON
                         InkWell(
                           onTap: () {
-                            qrScan(context);
+                            Navigator.of(context).pushNamed("/qr_scan");
                           },
                           child: Container(
                             margin: const EdgeInsets.only(left: 24),

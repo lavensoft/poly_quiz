@@ -95,9 +95,9 @@ class _QuizScreenState extends State<QuizScreen> {
         loop = result["data"]["moreData"]["loop"] ?? false;
         countTime = result["data"]["time"] > -1 ? result["data"]["time"] : -1;
       });
-    });
 
-    _loadGems();
+      _loadGems();
+    });
   }
 
   //*LOAD
@@ -108,7 +108,7 @@ class _QuizScreenState extends State<QuizScreen> {
       gems = prefs.getInt("gems") ?? 0;
     });
 
-    if(prefs.getInt("gems")! <= 0) {
+    if(prefs.getInt("gems")! <= 0 && !loop) {
       setState(() {
         congrasScreenVisible = true;
         isNotEnoughGems = true;
