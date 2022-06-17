@@ -22,6 +22,7 @@ class QuestionScreen extends StatefulWidget {
     required this.answerWrong,
     required this.answerCorrect,
     required this.questionData,
+    required this.quizData,
     required this.questionProgress,
     required this.gems,
     required this.countTime,
@@ -39,6 +40,7 @@ class QuestionScreen extends StatefulWidget {
   final dynamic questionData;
   final double questionProgress;
   final int gems;
+  final dynamic quizData;
 
   final Function? onAnswer;
 
@@ -53,14 +55,28 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Stack(
       children: [
-        QuestionGroup(),
-        !isMobile(context) ? const SizedBox(height: 24) : SizedBox(height: (widget.questionData["isEmoji"] ?? false) ? 12 : 0),
-        AnswerGroup()
-      ],
+        if(widget.quizData["moreData"]["logo"] != null) Positioned(
+          top: 24,
+          left: 0,
+          child: Container(
+            width: 150,
+            height: 96,
+            color: Colors.transparent,
+            child: Image.network(widget.quizData["moreData"]["logo"], fit: BoxFit.contain),
+          )
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            QuestionGroup(),
+            !isMobile(context) ? const SizedBox(height: 24) : SizedBox(height: (widget.questionData["isEmoji"] ?? false) ? 12 : 0),
+            AnswerGroup()
+          ],
+        )
+      ]
     );
   }
 

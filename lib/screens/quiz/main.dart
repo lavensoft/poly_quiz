@@ -369,6 +369,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     opacity: questionScreenVisible ? 1 : 0,
                     duration: const Duration(milliseconds: 750),
                     child: QuestionScreen(
+                      quizData: quizData,
                       countTime: countTime,
                       questionData: questionData[questionIndex],
                       questionCountdown: questionCountdown,
