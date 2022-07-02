@@ -15,68 +15,83 @@ class TextSelectBox extends StatefulWidget {
   _TextSelectBoxState createState() => _TextSelectBoxState();
 }
 
-class _TextSelectBoxState extends State<TextSelectBox> {
+class _TextSelectBoxState extends State<TextSelectBox> with TickerProviderStateMixin  {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 750),
+    vsync: this,
+  )..repeat(reverse: true);
+
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.fastOutSlowIn,
+  );
+
   @override
   Widget build(BuildContext context) {
     String title = widget.label;
     
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 56
-      ),
-      child: Container(
-      height: widget.isEmoji ? 56 : null,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        gradient: widget.selected || widget.correct || widget.wrong ? LinearGradient(
-          begin: widget.correct || widget.wrong ? Alignment.topCenter : const Alignment(-1,-1),
-          end: widget.correct || widget.wrong ? Alignment.bottomCenter :Alignment.bottomRight,
-          colors: <Color>[
-            Color(
-              widget.correct ? 0xFFc5ff73 : (widget.wrong ? 0xFFff9797 : widget.selected ? 0xFFfbe20f : 0xFFFFFFFF)), 
-            Color(
-              widget.correct ? 0xFF04d700 : (widget.wrong ? 0xFFff424f : widget.selected ? 0xFFf68a0d : 0xFFFFFFFF)
-            )],
-        ) : null, 
-        boxShadow: [
-          BoxShadow(
-            color: Color(widget.selected ? (widget.correct ? 0x54008b2f : (widget.wrong ? 0x69ef0000 : 0x69ef8000)) : 0x15000000),
-            offset: const Offset(0, 0),
-            blurRadius: 16,
-          ),
-        ],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          splashFactory: InkRipple.splashFactory,
-          borderRadius: BorderRadius.circular(11),
-          onTap: widget.onPressed,
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.only(
-                left: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
-                right: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
-                top: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 14 : 14), 
-                bottom: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 14 : 14)
-              ),
-              child: Text(title, style: TextStyle(
-                fontSize: widget.isEmoji ? 20 : 15,
-                color: widget.selected || widget.correct || widget.wrong ? Colors.white : const Color(0xFF06b5d8),
-                fontWeight: FontWeight.w600,
-                shadows: widget.selected ? [
-                  const Shadow(
-                    color: Color(0x60000000),
-                    offset: Offset(0, 0),
-                    blurRadius: 9,
-                  )
-                ] : null
-              ))
+    return AnimatedScale(
+      scale: widget.selected ? 1.2 : 1,
+      curve: Curves.elasticOut,
+      duration: const Duration(milliseconds: 750),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 56
+        ),
+        child: Container(
+        height: widget.isEmoji ? 56 : null,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          gradient: widget.selected || widget.correct || widget.wrong ? LinearGradient(
+            begin: widget.correct || widget.wrong ? Alignment.topCenter : const Alignment(-1,-1),
+            end: widget.correct || widget.wrong ? Alignment.bottomCenter :Alignment.bottomRight,
+            colors: <Color>[
+              Color(
+                widget.correct ? 0xFFc5ff73 : (widget.wrong ? 0xFFff9797 : widget.selected ? 0xFFfbe20f : 0xFFFFFFFF)), 
+              Color(
+                widget.correct ? 0xFF04d700 : (widget.wrong ? 0xFFff424f : widget.selected ? 0xFFf68a0d : 0xFFFFFFFF)
+              )],
+          ) : null, 
+          boxShadow: [
+            BoxShadow(
+              color: Color(widget.selected ? (widget.correct ? 0x54008b2f : (widget.wrong ? 0x69ef0000 : 0x69ef8000)) : 0x15000000),
+              offset: const Offset(0, 0),
+              blurRadius: 16,
             ),
-          )),
-      ),
-    ));
+          ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashFactory: InkRipple.splashFactory,
+            borderRadius: BorderRadius.circular(11),
+            onTap: widget.onPressed,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
+                  right: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 24 : 48), 
+                  top: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 14 : 14), 
+                  bottom: widget.isEmoji ? (isMobile(context) ? 0 : 0) : (isMobile(context) ? 14 : 14)
+                ),
+                child: Text(title, style: TextStyle(
+                  fontSize: widget.isEmoji ? 20 : 15,
+                  color: widget.selected || widget.correct || widget.wrong ? Colors.white : const Color(0xFF06b5d8),
+                  fontWeight: FontWeight.w600,
+                  shadows: widget.selected ? [
+                    const Shadow(
+                      color: Color(0x60000000),
+                      offset: Offset(0, 0),
+                      blurRadius: 9,
+                    )
+                  ] : null
+                ))
+              ),
+            )),
+        ),
+    ))  
+    );  
   }
 }
 

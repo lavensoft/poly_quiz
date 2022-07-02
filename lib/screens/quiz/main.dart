@@ -30,7 +30,28 @@ class QuizScreen extends StatefulWidget {
   _QuizScreenState createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen> {
+class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
+  //*ANIMATIONS
+  late AnimationController _scaleController = AnimationController(
+    duration: const Duration(seconds: 2),
+    reverseDuration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late Animation<double> scaleAnimation = CurvedAnimation(
+    parent: _scaleController,
+    curve: Curves.elasticInOut,
+  );
+
+  late AnimationController _rotateController = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late Animation<double> rotateAnimation = CurvedAnimation(
+    parent: _rotateController,
+    curve: Curves.elasticOut,
+  );
+
+  //*VARIABLES
   var quizData;
   var questionData;
   List<int> userAnswers = [];
@@ -161,6 +182,28 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  //*RESTART ANIMATION
+  void _restartAnimation() {
+    _scaleController = AnimationController(
+      duration: const Duration(seconds: 1),
+      reverseDuration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+    scaleAnimation = CurvedAnimation(
+      parent: _scaleController,
+      curve: Curves.elasticInOut,
+    );
+
+    _rotateController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+    rotateAnimation = CurvedAnimation(
+      parent: _rotateController,
+      curve: Curves.elasticOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -206,6 +249,14 @@ class _QuizScreenState extends State<QuizScreen> {
     }
 
     void handleAnswer(int index) {
+      //Restart animation
+      if (_scaleController.isAnimating) {
+        _scaleController.stop(canceled: false);
+        _restartAnimation();
+      } else {
+        _restartAnimation();
+      }
+
       if(answerSelected == -1 && index != -2 && !isWaitingQuestion) {
         List<int> tUserAnswers = userAnswers;
         tUserAnswers.add(index);
@@ -378,6 +429,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       answerSelected: answerSelected,
                       showGems: showGems,
                       showProgress: showProgress,
+                      scaleAnimation: scaleAnimation,
+                      rotateAnimation: rotateAnimation,
                       gems: gems,
                       questionProgress: questionIndex / (questionData.length - 1),
                       onAnswer: (index) {

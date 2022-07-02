@@ -26,6 +26,8 @@ class QuestionScreen extends StatefulWidget {
     required this.questionProgress,
     required this.gems,
     required this.countTime,
+    required this.scaleAnimation,
+    required this.rotateAnimation,
     this.showGems = true,
     this.showProgress = true,
     }) : super(key: key);
@@ -41,6 +43,8 @@ class QuestionScreen extends StatefulWidget {
   final double questionProgress;
   final int gems;
   final dynamic quizData;
+  final Animation<double> scaleAnimation;
+  final Animation<double> rotateAnimation;
 
   final Function? onAnswer;
 
@@ -84,6 +88,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   Widget QuestionGroup() {
     return Container(
       width: 640,
+      //height: (widget.questionData["isEmoji"] ?? false) && (widget.questionData["image"] != null) ? 250 : null,
       margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -146,17 +151,27 @@ class _QuestionScreenState extends State<QuestionScreen> {
             constraints: const BoxConstraints(
               maxHeight: 128
             ),
-            child: Image.network(
-              widget.questionData["image"],
-            ),
+            child: (widget.answerSelected < 0 && (widget.questionData["isEmoji"] ?? false)) ? 
+              Image.network(
+                widget.questionData["image"],
+              ) : RotationTransition(
+                turns: widget.scaleAnimation,
+                child: ScaleTransition(
+                  scale: widget.scaleAnimation,
+                  child: Text(widget.questionData["answers"][widget.answerSelected], style: const TextStyle(fontSize: 86))
+                )
+              ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(
+            height: (widget.answerSelected < 0 && widget.questionData["image"] != null && (widget.questionData["isEmoji"] ?? false)) ? 32 : 60
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                widget.questionData["question"],
+                (widget.answerSelected < 0 && (widget.questionData["isEmoji"] ?? false)) ? 
+                widget.questionData["question"] : "Cảm ơn bạn đã đóng góp ý kiến!",
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -188,6 +203,16 @@ class _QuestionScreenState extends State<QuestionScreen> {
             isEmoji: isEmoji,
             onPressed: () {
               handleAnswer(0);
+              // if (_rotateController.isAnimating) {
+              //   _rotateController.stop(canceled: false);
+              // } else {
+              //   _rotateController.forward();
+              // }
+              // if (_scaleController.isAnimating) {
+              //   _scaleController.stop(canceled: false);
+              // } else {
+              //   _scaleController.forward();
+              // }
             },
             selected: widget.answerSelected == 0,
             correct: widget.answerCorrect && widget.answerSelected == 0,
