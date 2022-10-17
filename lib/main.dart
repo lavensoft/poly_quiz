@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
         '/gems_exchange': (context) => GemsExchangeScreen(
           data: ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>,
         ),
-        '/': (context) => HomeScreen(),
+        '/home': (context) => HomeScreen(),
       },
     );
   }

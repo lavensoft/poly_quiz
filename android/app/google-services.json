@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "811915506709-9ph2jnre7g97qg4lq5ohqbs8scm72brg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lavenes.quizz",
+            "certificate_hash": "3a6ce500a6bcdf3f593679a5ed32a80556c4dc77"
+          }
+        },
+        {
+          "client_id": "811915506709-hkk6atmf4urcnvqta5u9766lb95b50bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lavenes.quizz",
+            "certificate_hash": "489f42e4e531122c1b86c490a9c7d03be36115e3"
+          }
+        },
+        {
           "client_id": "811915506709-kkqq12atsttd40opk2260eal7p7upse9.apps.googleusercontent.com",
           "client_type": 3
         }

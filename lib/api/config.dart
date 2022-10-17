@@ -17,8 +17,8 @@ class APIConfig {
     "Content-Type": "application/json",
     //"w_api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
     "api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
-    "app_id" : "625453bc7b3cbb43d51602a3",
+    "app" : "625453bc7b3cbb43d51602a3",
   };
 
-  static String API = Global.DEBUG ? "http://localhost:8085/api/v1" : "https://server.lavenes.com:8085/api/v1";
+  static String API = Global.DEBUG ? "http://192.168.1.6:9000/api/v1" : "https://orios-server.lavenes.com/api/v1";
 }

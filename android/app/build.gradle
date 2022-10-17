@@ -53,8 +53,9 @@ android {
         applicationId "com.lavenes.quizz"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -80,4 +81,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:30.1.0')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.android.support:multidex:1.0.3'
 }

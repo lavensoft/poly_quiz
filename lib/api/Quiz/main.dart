@@ -15,6 +15,7 @@ import "dart:convert";
 import "package:shared_preferences/shared_preferences.dart";
 import 'dart:math';
 import "../config.dart";
+import "../../global/global.dart";
 
 class QuizAPI {
   static Future getAll() async{

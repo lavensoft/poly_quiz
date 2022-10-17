@@ -14,6 +14,13 @@ import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "../../../api/main.dart";
+import 'package:google_sign_in/google_sign_in.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+  ],
+);
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -27,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     checkLogin();
   }
   
@@ -35,12 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
     final prefs = await SharedPreferences.getInstance();
 
     if(prefs.getString("email") != null && prefs.getString("name") != null && prefs.getString("userId") != null) {
-      Navigator.of(context).pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil("/home", (Route<dynamic> route) => false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
     void _handleShowAlert (String title, String message) {
       showDialog(
         context: context,
@@ -49,8 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
             title: Text(title),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
+              TextButton(
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -62,39 +70,39 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     Future<void> _handleSignIn() async {
-      final prefs = await SharedPreferences.getInstance();
-      bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+      try {
+        await _googleSignIn.signIn().then((userData) async {
+          final prefs = await SharedPreferences.getInstance();
+          bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(userData?.email ?? "");
 
-      if(email.isEmpty || password.isEmpty) {
-        _handleShowAlert("🙈", "Vui lòng nhập đầy đủ thông tin!");
-      }else if(!emailValid) {
-        _handleShowAlert("🙈", "Email không hợp lệ!");
-      }else if(email.split("@")[1] != "fpt.edu.vn") {
-        _handleShowAlert("📬", "Đây không phải là email của FPT!");
-      }else{
-        UserAPI.auth(email, password).then((value) {
-          print(value);
-          if(value["code"] == 200) {
-            var userData = value["data"];
-            
-            //Set data
-            prefs.setString("avatar", "");
-            prefs.setString("name", userData["name"]);
-            prefs.setString("email", userData["email"]);
-            prefs.setInt("gems", userData["data"]["gems"]);
-            prefs.setString("userId", userData["_id"]);
-            prefs.setString("companyId", userData["companyId"]);
-            prefs.setString("token", userData["accessToken"]);
-    
-            Navigator.pushReplacementNamed(context, "/");
+          if(!emailValid) {
+            _handleShowAlert("🙈", "Email không hợp lệ!");
+          }else if(userData?.email.split("@")[1] != "fpt.edu.vn") {
+            _handleShowAlert("📬", "Đây không phải là email của FPT!");
           }else{
-            if(value["message"] == "Invalid password") {
-              _handleShowAlert("🔒", "Mật khẩu không đúng!");
-            }else if(value["message"] == "User not found") {
-              _handleShowAlert("💌", "Email không tồn tại!");
+            var googleKey= await userData!.authentication;
+            var accessToken = googleKey.accessToken;
+
+            var loginRes = await UserAPI.authGoogle(accessToken);
+
+            if(loginRes["code"] == 200) {
+              var userData = loginRes["data"];
+        
+              prefs.setString("avatar", "");
+              prefs.setString("name", userData["name"]);
+              prefs.setString("email", userData["email"]);
+              prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);
+              prefs.setString("userId", userData["_id"]);
+              prefs.setString("companyId", userData["app"] ?? userData["companyId"]);
+      
+              Navigator.pushReplacementNamed(context, "/home");
+            }else{
+              _handleShowAlert("🙈", "Đăng nhập thất bại");
             }
           }
         });
+      } catch (error) {
+        _handleShowAlert("🛑", error.toString());
       }
     }
 

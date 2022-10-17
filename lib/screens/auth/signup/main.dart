@@ -44,8 +44,8 @@ class _SignupScreenState extends State<SignupScreen> {
             title: Text(title),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
+              TextButton(
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

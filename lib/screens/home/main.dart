@@ -55,19 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       
       UserAPI.getUserData().then((value) {
-        prefs.setInt("gems", value["data"]["gems"]);
+        if(value["moreData"]?["gems"] == null) {
+          value["moreData"] = {
+            "gems": 3000
+          };
+        }
+
+        prefs.setInt("gems", value["moreData"]["gems"]);
         
         setState(() {
           userData = value;
-        });
-      });
-
-      QuizAPI.getUserQuizRank().then((value) {
-        setState(() {
-          userRanking = "${value["data"]["rank"]}/${value["data"]["total"]}";
-          userRankNum = value["data"]["rank"];
-          rankTotal = value["data"]["total"];
-
           isLoading = false;
         });
       });
@@ -416,41 +413,41 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         children: [
           //*RANK
-          Expanded(
-            child: Row(
-              children: [
-                Image.asset("assets/icons/${Global.getUserRankBadge(
-                  userRankNum,
-                  rankTotal
-                )}", height: 40), //*ICON
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text( //*TITLE
-                      "Xếp Hạng",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFabafb2)
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text( //*VALUE
-                      userRanking,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF444444)
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // Expanded(
+          //   child: Row(
+          //     children: [
+          //       Image.asset("assets/icons/${Global.getUserRankBadge(
+          //         userRankNum,
+          //         rankTotal
+          //       )}", height: 40), //*ICON
+          //       const SizedBox(width: 16),
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           const Text( //*TITLE
+          //             "Xếp Hạng",
+          //             style: TextStyle(
+          //               fontSize: 12,
+          //               fontWeight: FontWeight.w600,
+          //               color: Color(0xFFabafb2)
+          //             ),
+          //           ),
+          //           const SizedBox(height: 5),
+          //           Text( //*VALUE
+          //             userRanking,
+          //             style: const TextStyle(
+          //               fontSize: 16,
+          //               fontWeight: FontWeight.w700,
+          //               color: Color(0xFF444444)
+          //             ),
+          //           )
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
-          const SizedBox(width: 24),
+          // const SizedBox(width: 24),
 
           //*GEMS
           Expanded(
@@ -471,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text( //*VALUE
-                      userData?["data"]["gems"].toString() ?? "0",
+                      userData?["moreData"]["gems"].toString() ?? "0",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
