@@ -178,7 +178,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         // });
       });
     }else{
-      Navigator.pushReplacementNamed(context, "/");
+      Navigator.pushReplacementNamed(context, "/home");
     }
   }
 

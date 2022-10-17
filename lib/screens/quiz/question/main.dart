@@ -170,8 +170,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                (widget.answerSelected < 0 && (widget.questionData["isEmoji"] ?? false)) ? 
-                widget.questionData["question"] : "Cảm ơn bạn đã đóng góp ý kiến!",
+                // (widget.answerSelected < 0 && (widget.questionData["isEmoji"] ?? false)) ? 
+                // widget.questionData["question"] : "Cảm ơn bạn đã đóng góp ý kiến!",
+                widget.questionData["question"],
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

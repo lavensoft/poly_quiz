@@ -106,8 +106,8 @@ class UserAPI {
   static Future updateGems(int gems) async {
     final prefs = await SharedPreferences.getInstance();
 
-    Response response = await patch(Uri.parse("${APIConfig.API}/client_users/${prefs.getString("userId")}"), body: utf8.encode(jsonEncode({
-      "data" : {
+    Response response = await put(Uri.parse("${APIConfig.API}/client_users/${prefs.getString("userId")}"), body: utf8.encode(jsonEncode({
+      "moreData" : {
         "gems" : gems
       }
     })), headers: APIConfig.HEADERS);
