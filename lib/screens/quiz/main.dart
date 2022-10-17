@@ -140,12 +140,21 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   //*WHEN FINISH
   void _handleFinishGame() async{
+    final prefs = await SharedPreferences.getInstance();
+
     //* Update user gems 
     await UserAPI.updateGems(gems);
 
     //*Update user answers
     int index = 0;
 
+    //*Save to localStorage
+    String quizJoined = prefs.getString("quizJoined") ?? "";
+    quizJoined = "$quizJoined, ${quizData["_id"]}";
+
+    await prefs.setString("quizJoined", quizJoined);
+
+    //*Save answer
     await Future.forEach(userAnswers, (element) async {
       await QuizAPI.addQuizAnswer(quizData["_id"], questionData[index]["id"], int.parse(element.toString())).then((value) {
         if(value["code"] == 200) {
@@ -403,6 +412,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       subtitle: quizData["category"],
                       description: quizData["description"],
                       image: quizData["banner"],
+                      quizId: quizData["_id"],
                       onPlay: () {
                         handlePlay();
                       },
