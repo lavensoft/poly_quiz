@@ -77,7 +77,7 @@ class UserAPI {
   static Future authGoogle(String? token) async {
     if(token != null) {
       Response response = await post(Uri.parse("${APIConfig.API}/client_users/auth/google"), body: utf8.encode(jsonEncode({
-        "token": token
+        "accessToken": token
       })), headers: APIConfig.HEADERS);
 
       return json.decode(response.body);
@@ -100,6 +100,7 @@ class UserAPI {
       Uri.parse("${APIConfig.API}/client_users/${prefs.getString("userId")}"), 
       headers: APIConfig.HEADERS
     );
+    
     return json.decode(response.body)["data"];
   }
 

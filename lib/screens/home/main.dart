@@ -18,6 +18,13 @@ import 'package:url_launcher/url_launcher.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/cupertino.dart";
 import "../../api/main.dart";
+import 'package:google_sign_in/google_sign_in.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email'
+  ],
+);
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -85,6 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
       prefs.remove("userId");
       prefs.remove("companyId");
 
+      await _googleSignIn.disconnect();
+
       Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
     }
 
@@ -149,7 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   backgroundColor: Colors.black,
                                   radius: 24,
                                   child: ClipRRect(
-                                    child:  Image.asset("assets/avatars/${userData?["avatar"] ?? "a1.png"}"),
+                                    child: userData?["avatar"] != null ?
+                                      Image.network(userData?["avatar"]) :
+                                      Image.asset("assets/avatars/a1.png"),
                                     borderRadius: BorderRadius.circular(24.0),
                                   )
                                 ),
