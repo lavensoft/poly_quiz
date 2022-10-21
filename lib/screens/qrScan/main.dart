@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import "dart:io";
+import "../../api/main.dart";
 
 class QRScanView extends StatefulWidget {
   @override
@@ -39,7 +40,7 @@ class _QRViewExampleState extends State<QRScanView> {
           ),
           if(!started) Positioned(
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 controller!.resumeCamera();
 
                 setState(() {
@@ -86,7 +87,7 @@ class _QRViewExampleState extends State<QRScanView> {
     controller.scannedDataStream.listen((scanData) {
       String code = scanData.code ?? "";
 
-      if(code.indexOf("gift_exchange") > -1) { //GIFT EXCHANGE
+      if(code.contains("gift_exchange")) { //GIFT EXCHANGE
         String params = code.split("/")[2];
         List<String> paramsList = params.split("|");
 
@@ -98,7 +99,7 @@ class _QRViewExampleState extends State<QRScanView> {
             "values": paramsList
           }
         );
-      }else if(code.indexOf("quiz") > -1) { //QUIZ
+      }else if(code.contains("quiz")) { //QUIZ
         String quizId = code.split("#")[1].split("/")[2];
 
         Navigator.pushNamedAndRemoveUntil(
@@ -107,6 +108,17 @@ class _QRViewExampleState extends State<QRScanView> {
           (route) => false,
           arguments: quizId
         );
+      }else if(code.contains("checkin")) { //CHECKIN
+        String eventId = code.split("/")[4];
+
+        Navigator.pushNamedAndRemoveUntil(
+            context, 
+            "/checkin", 
+            (route) => false,
+            arguments: {
+              "event": eventId
+            }
+          );
       }
     });
   }

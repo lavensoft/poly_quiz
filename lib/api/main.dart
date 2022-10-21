@@ -12,3 +12,4 @@
 
 export "Quiz/main.dart";
 export "User/main.dart";
+export "Event/main.dart";

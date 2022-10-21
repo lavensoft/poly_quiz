@@ -10,6 +10,8 @@
  * Lavenes.
  */
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import "../../global/global.dart";
 
 class APIConfig {
@@ -19,6 +21,17 @@ class APIConfig {
     "api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
     "app" : "625453bc7b3cbb43d51602a3",
   };
+
+  static Future<Map<String, String>> getHeaders() async {
+    var prefs = await SharedPreferences.getInstance();
+      
+    return {
+      "Content-Type": "application/json",
+      "authorization": prefs.getString("token") ?? "",
+      "api_key" : "wNp9EytjOb2WG7YqzqXQJxMqSQBWD8Zh8eRJf7Zo",
+      "app" : "625453bc7b3cbb43d51602a3",
+    };
+  }
 
   static String API = Global.DEBUG ? "http://192.168.1.6:9000/api/v1" : "https://orios-server.lavenes.com/api/v1";
 }

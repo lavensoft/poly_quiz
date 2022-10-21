@@ -94,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
               prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);
               prefs.setString("userId", userData["_id"]);
               prefs.setString("companyId", userData["app"] ?? userData["companyId"]);
+              prefs.setString("token", userData["accessToken"]);
       
               Navigator.pushReplacementNamed(context, "/home");
             }else{
@@ -135,65 +136,65 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 48),
-                  TextBox(
-                    placeholder: "Email",
-                    onChanged: (e) {
-                      setState(() {
-                        email = e;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextBox(
-                    obscureText: true,
-                    placeholder: "Mật khẩu",
-                    onChanged: (e) {
-                      setState(() {
-                        password = e;
-                      });
-                    },
-                  ),
+                  // const SizedBox(height: 48),
+                  // TextBox(
+                  //   placeholder: "Email",
+                  //   onChanged: (e) {
+                  //     setState(() {
+                  //       email = e;
+                  //     });
+                  //   },
+                  // ),
+                  // const SizedBox(height: 16),
+                  // TextBox(
+                  //   obscureText: true,
+                  //   placeholder: "Mật khẩu",
+                  //   onChanged: (e) {
+                  //     setState(() {
+                  //       password = e;
+                  //     });
+                  //   },
+                  // ),
                   const SizedBox(height: 48),
                   PrimaryButton(
-                    label: "Đăng nhập", 
+                    label: "Đăng nhập với Google", 
                     onPressed: () {
                       _handleSignIn();
                     }
                   ),
-                  const SizedBox(height: 32),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, "/signup");
-                    },
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "Bạn chưa có tài khoản?",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black45
-                            ),
-                          ),
-                          SizedBox(width: 3),
-                          Text(
-                            "Đăng ký",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ),
+                  // const SizedBox(height: 32),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.pushNamed(context, "/signup");
+                  //   },
+                  //   child: Container(
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: const [
+                  //         Text(
+                  //           "Bạn chưa có tài khoản?",
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             fontSize: 13,
+                  //             fontWeight: FontWeight.w600,
+                  //             color: Colors.black45
+                  //           ),
+                  //         ),
+                  //         SizedBox(width: 3),
+                  //         Text(
+                  //           "Đăng ký",
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             fontSize: 13,
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.orange
+                            // ),
+                          // ),
+                        // ],
+                      // ),
+                    // )
+                  // ),
                 ],
               ),
             ),

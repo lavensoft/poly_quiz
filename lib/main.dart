@@ -20,6 +20,7 @@ import "screens/auth/login/main.dart";
 import "screens/auth/signup/main.dart";
 import "screens/gemsExchange/main.dart";
 import "screens/qrScan/main.dart";
+import "screens/checkin/main.dart";
 
 void main() async{
   SystemChrome.setSystemUIOverlayStyle(
@@ -76,6 +77,9 @@ class MyApp extends StatelessWidget {
           quizId: ModalRoute.of(context)!.settings.arguments as String,
         ),
         '/gems_exchange': (context) => GemsExchangeScreen(
+          data: ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>,
+        ),
+        '/checkin': (context) => CheckinScreen(
           data: ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>,
         ),
         '/home': (context) => HomeScreen(),

@@ -207,7 +207,7 @@ class _GemsExchangeScreenState extends State<GemsExchangeScreen> {
                 PrimaryButton(
                   label: "Trở về trang chủ", 
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
                   }
                 ) 
               ] : [
