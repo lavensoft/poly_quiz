@@ -21,8 +21,11 @@ import "screens/auth/signup/main.dart";
 import "screens/gemsExchange/main.dart";
 import "screens/qrScan/main.dart";
 import "screens/checkin/main.dart";
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async{
+  usePathUrlStrategy();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.white, // navigation bar color
