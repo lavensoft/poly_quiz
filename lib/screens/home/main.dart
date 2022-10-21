@@ -53,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
     }else {
       QuizAPI.getAll().then((value) {
-        var filteredData = value["data"];
-        filteredData.removeWhere((item) => item["status"] == "hidden");
+        var quizData = value["data"];
+        var filteredData = quizData.removeWhere((item) => item["status"] == "hidden") ?? [];
 
         setState(() {
           _quizList = filteredData;
@@ -230,6 +230,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //*PR BANNER
+                        Container(
+                          padding: const EdgeInsets.only(right: 24),
+                          margin: const EdgeInsets.only(bottom: 48),
+                          child: DetailQuizCard(
+                            title: "Tham gia CLB Coder Poly", 
+                            subtitle: "CODER POLY", 
+                            image: "https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/306705748_395484086091367_2222075087178776332_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=qaVNuIFqPvEAX_PNfwl&_nc_oc=AQkDsKCmGHnylyakf9GwT7LDkICet26yBRQVuRSUOs5ID80iGqlu0x-s-zyWjnHD9sc&_nc_ht=scontent.fsgn5-12.fna&oh=00_AT_Q0H8WvgDPwQ9pbm0-pL_rYJ7juqD7Ob21z3xJzC0h_A&oe=6358890A", 
+                            purple: true,
+                            onTap: () async {
+                              await launch("https://coder.poly-bees.com/zalo_invite");
+                            }
+                          ),
+                        ),
+
                         Text(
                           "Xin chào ${userData?["name"]} 👋",
                           style: const TextStyle(

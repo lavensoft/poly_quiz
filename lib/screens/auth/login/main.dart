@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if(loginRes["code"] == 200) {
               var userData = loginRes["data"];
         
-              prefs.setString("avatar", "");
+              prefs.setString("avatar", userData["avatar"]);
               prefs.setString("name", userData["name"]);
               prefs.setString("email", userData["email"]);
               prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);

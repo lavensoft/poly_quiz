@@ -53,8 +53,8 @@ android {
         applicationId "com.lavenes.quizz"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 5
-        versionName "1.1.0"
+        versionCode 6
+        versionName "1.2.0"
         multiDexEnabled true
     }
 

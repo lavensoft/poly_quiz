@@ -12,6 +12,7 @@ class _QRViewExampleState extends State<QRScanView> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   bool started = false;
+  bool isProcessQR = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -87,31 +88,16 @@ class _QRViewExampleState extends State<QRScanView> {
     controller.scannedDataStream.listen((scanData) {
       String code = scanData.code ?? "";
 
-      if(code.contains("gift_exchange")) { //GIFT EXCHANGE
-        String params = code.split("/")[2];
-        List<String> paramsList = params.split("|");
+      if(!isProcessQR) {
+        // print(code);
+        if(code.contains("checkin")) { //CHECKIN
+          setState(() {
+            isProcessQR = true;
+          });
 
-        Navigator.pushNamedAndRemoveUntil(
-          context, 
-          "/gems_exchange", 
-          (route) => false,
-          arguments: {
-            "values": paramsList
-          }
-        );
-      }else if(code.contains("quiz")) { //QUIZ
-        String quizId = code.split("#")[1].split("/")[2];
+          String eventId = code.split("/")[4];
 
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          "/quiz",
-          (route) => false,
-          arguments: quizId
-        );
-      }else if(code.contains("checkin")) { //CHECKIN
-        String eventId = code.split("/")[4];
-
-        Navigator.pushNamedAndRemoveUntil(
+          Navigator.pushNamedAndRemoveUntil(
             context, 
             "/checkin", 
             (route) => false,
@@ -119,7 +105,43 @@ class _QRViewExampleState extends State<QRScanView> {
               "event": eventId
             }
           );
+        }
       }
+
+      // if(code.contains("gift_exchange")) { //GIFT EXCHANGE
+      //   String params = code.split("/")[2];
+      //   List<String> paramsList = params.split("|");
+
+      //   Navigator.pushNamedAndRemoveUntil(
+      //     context, 
+      //     "/gems_exchange", 
+      //     (route) => false,
+      //     arguments: {
+      //       "values": paramsList
+      //     }
+      //   );
+      // }else if(code.contains("quiz")) { //QUIZ
+      //   String quizId = code.split("#")[1].split("/")[2];
+
+      //   Navigator.pushNamedAndRemoveUntil(
+      //     context,
+      //     "/quiz",
+      //     (route) => false,
+      //     arguments: quizId
+      //   );
+      // }
+      // }else if(code.contains("checkin")) { //CHECKIN
+      //   String eventId = code.split("/")[4];
+
+      //   Navigator.pushNamedAndRemoveUntil(
+      //       context, 
+      //       "/checkin", 
+      //       (route) => false,
+      //       arguments: {
+      //         "event": eventId
+      //       }
+      //     );
+      // }
     });
   }
 

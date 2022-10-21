@@ -13,7 +13,7 @@
 export "func.dart";
 
 class Global {
-  static bool DEBUG = true;
+  static bool DEBUG = false;
   //*RANKING
   static List<String> rankBadges = [
     "diamondRank.png",
