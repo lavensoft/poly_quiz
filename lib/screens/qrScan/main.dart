@@ -32,12 +32,9 @@ class _QRViewExampleState extends State<QRScanView> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          Flexible(
-            flex: 5,
-            child: QRView(
+          QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
-            ),
           ),
           if(!started) Positioned(
             child: ElevatedButton(
