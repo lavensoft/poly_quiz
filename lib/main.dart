@@ -24,7 +24,7 @@ import "screens/checkin/main.dart";
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async{
-  usePathUrlStrategy();
+  // usePathUrlStrategy();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
