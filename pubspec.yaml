@@ -42,7 +42,6 @@ dependencies:
   url_launcher: ^6.0.20
   jsqr: ^0.1.1
   qr_code_scanner: ^1.0.1
-  mobile_scanner: ^2.0.0
   google_sign_in: ^5.4.2
   orios:
     path: ./orios
