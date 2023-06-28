@@ -48,6 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
     void _handleShowAlert (String title, String message) {
       showDialog(
@@ -70,41 +72,74 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     Future<void> _handleSignIn() async {
-      try {
-        await _googleSignIn.signIn().then((userData) async {
-          final prefs = await SharedPreferences.getInstance();
-          bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(userData?.email ?? "");
+      final prefs = await SharedPreferences.getInstance();
+      bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
 
-          if(!emailValid) {
-            _handleShowAlert("🙈", "Email không hợp lệ!");
-          }else if(userData?.email.split("@")[1] != "fpt.edu.vn") {
-            _handleShowAlert("📬", "Đây không phải là email của FPT!");
-          }else{
-            var googleKey= await userData!.authentication;
-            var accessToken = googleKey.accessToken;
+      if(email == "" || password == "") {
+        _handleShowAlert("🙈", "Vui lòng nhập đầy đủ thông tin!");
+      }else if(!emailValid) {
+        _handleShowAlert("🙈", "Email không hợp lệ!");
+      }else if(email.split("@")[1] != "fpt.edu.vn") {
+        _handleShowAlert("📬", "Đây không phải là email của FPT!");
+      }else{
+        var user = await UserAPI.auth(email, password);
 
-            var loginRes = await UserAPI.authGoogle(accessToken);
-
-            if(loginRes["code"] == 200) {
-              var userData = loginRes["data"];
-        
-              prefs.setString("avatar", userData["avatar"]);
-              prefs.setString("name", userData["name"]);
-              prefs.setString("email", userData["email"]);
-              prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);
-              prefs.setString("userId", userData["_id"]);
-              prefs.setString("companyId", userData["app"] ?? userData["companyId"]);
-              prefs.setString("token", userData["accessToken"]);
-      
-              Navigator.pushReplacementNamed(context, "/home");
-            }else{
-              _handleShowAlert("🙈", "Đăng nhập thất bại");
-            }
+        if(user["code"] == 200) {
+          var userData = user["data"];
+          
+          //Set data
+          prefs.setString("avatar", userData["avatar"] ?? "");
+          prefs.setString("name", userData["name"]);
+          prefs.setString("email", userData["email"]);
+          prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);
+          prefs.setString("userId", userData["_id"]);
+          // prefs.setString("companyId", userData["app"] ?? userData["companyId"]);
+          prefs.setString("token", userData["accessToken"]);
+  
+          Navigator.pushReplacementNamed(context, "/home");
+        }else{
+          if(user["message"] == "PASSWORD_NOT_MATCH") {
+            _handleShowAlert("🔒", "Mật khẩu không đúng!");
+          }else if(user["message"] == "EMAIL_NOT_FOUND") {
+            _handleShowAlert("💌", "Email không tồn tại!");
           }
-        });
-      } catch (error) {
-        _handleShowAlert("🛑", error.toString());
+        }
       }
+      // try {
+      //   await _googleSignIn.signIn().then((userData) async {
+      //     final prefs = await SharedPreferences.getInstance();
+      //     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(userData?.email ?? "");
+
+      //     if(!emailValid) {
+      //       _handleShowAlert("🙈", "Email không hợp lệ!");
+      //     }else if(userData?.email.split("@")[1] != "fpt.edu.vn") {
+      //       _handleShowAlert("📬", "Đây không phải là email của FPT!");
+      //     }else{
+      //       var googleKey= await userData!.authentication;
+      //       var accessToken = googleKey.accessToken;
+
+      //       var loginRes = await UserAPI.authGoogle(accessToken);
+
+      //       if(loginRes["code"] == 200) {
+      //         var userData = loginRes["data"];
+        
+      //         prefs.setString("avatar", userData["avatar"]);
+      //         prefs.setString("name", userData["name"]);
+      //         prefs.setString("email", userData["email"]);
+      //         prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);
+      //         prefs.setString("userId", userData["_id"]);
+      //         prefs.setString("companyId", userData["app"] ?? userData["companyId"]);
+      //         prefs.setString("token", userData["accessToken"]);
+      
+      //         Navigator.pushReplacementNamed(context, "/home");
+      //       }else{
+      //         _handleShowAlert("🙈", "Đăng nhập thất bại");
+      //       }
+      //     }
+      //   });
+      // } catch (error) {
+      //   _handleShowAlert("🛑", error.toString());
+      // }
     }
 
     return Scaffold(
@@ -136,65 +171,65 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  // const SizedBox(height: 48),
-                  // TextBox(
-                  //   placeholder: "Email",
-                  //   onChanged: (e) {
-                  //     setState(() {
-                  //       email = e;
-                  //     });
-                  //   },
-                  // ),
-                  // const SizedBox(height: 16),
-                  // TextBox(
-                  //   obscureText: true,
-                  //   placeholder: "Mật khẩu",
-                  //   onChanged: (e) {
-                  //     setState(() {
-                  //       password = e;
-                  //     });
-                  //   },
-                  // ),
+                  const SizedBox(height: 48),
+                  TextBox(
+                    placeholder: "Email",
+                    onChanged: (e) {
+                      setState(() {
+                        email = e;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextBox(
+                    obscureText: true,
+                    placeholder: "Mật khẩu",
+                    onChanged: (e) {
+                      setState(() {
+                        password = e;
+                      });
+                    },
+                  ),
                   const SizedBox(height: 48),
                   PrimaryButton(
-                    label: "Đăng nhập với Google", 
+                    label: "Đăng nhập", 
                     onPressed: () {
                       _handleSignIn();
                     }
                   ),
-                  // const SizedBox(height: 32),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     Navigator.pushNamed(context, "/signup");
-                  //   },
-                  //   child: Container(
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //       children: const [
-                  //         Text(
-                  //           "Bạn chưa có tài khoản?",
-                  //           textAlign: TextAlign.center,
-                  //           style: TextStyle(
-                  //             fontSize: 13,
-                  //             fontWeight: FontWeight.w600,
-                  //             color: Colors.black45
-                  //           ),
-                  //         ),
-                  //         SizedBox(width: 3),
-                  //         Text(
-                  //           "Đăng ký",
-                  //           textAlign: TextAlign.center,
-                  //           style: TextStyle(
-                  //             fontSize: 13,
-                  //             fontWeight: FontWeight.bold,
-                  //             color: Colors.orange
-                            // ),
-                          // ),
-                        // ],
-                      // ),
-                    // )
-                  // ),
+                  const SizedBox(height: 32),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/signup");
+                    },
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Bạn chưa có tài khoản?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black45
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Text(
+                            "Đăng ký",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ),
                 ],
               ),
             ),

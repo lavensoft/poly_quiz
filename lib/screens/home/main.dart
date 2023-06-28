@@ -230,6 +230,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Container(
+                          padding: const EdgeInsets.only(right: 24),
+                          margin: const EdgeInsets.only(bottom: 48),
+                          child: DetailQuizCard(
+                            title: "CHECKIN SỰ KIỆN", 
+                            subtitle: "CODER POLY", 
+                            image: "https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/306705748_395484086091367_2222075087178776332_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=qaVNuIFqPvEAX_PNfwl&_nc_oc=AQkDsKCmGHnylyakf9GwT7LDkICet26yBRQVuRSUOs5ID80iGqlu0x-s-zyWjnHD9sc&_nc_ht=scontent.fsgn5-12.fna&oh=00_AT_Q0H8WvgDPwQ9pbm0-pL_rYJ7juqD7Ob21z3xJzC0h_A&oe=6358890A", 
+                            orange: true,
+                            onTap: () async {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context, 
+                                "/checkin", 
+                                (route) => false,
+                                arguments: {
+                                  "event": "63529fecde17b30454e2912a"
+                                }
+                              );
+                            }
+                          ),
+                        ),
+
                         //*PR BANNER
                         Container(
                           padding: const EdgeInsets.only(right: 24),

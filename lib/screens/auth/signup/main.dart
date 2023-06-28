@@ -10,10 +10,12 @@
  * Lavenes.
  */
 
+
 import "package:flutter/material.dart";
 import "package:quizz/lavenes.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "../../../api/main.dart";
+import "package:flutter/cupertino.dart";
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -24,6 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String name = "";
   String email = "";
   String password = "";
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -66,50 +69,76 @@ class _SignupScreenState extends State<SignupScreen> {
       }else if(email.split("@")[1] != "fpt.edu.vn") {
         _handleShowAlert("🙈", "Đây không phải là email của FPT!");
       }else{
-        UserAPI.add(
-          email,
-          name,
-          password
-        ).then((value) async{
-          if(value["code"] == 200) {
-            var userData = value["data"];
+        setState(() {
+          isLoading = true;
+        });
+        
+        var user = await UserAPI.add(email, name, password);
 
-            print(userData);
+        if(user["code"] == 200) {
+          var userData = user["data"];
 
-            final prefs = await SharedPreferences.getInstance();
+          final prefs = await SharedPreferences.getInstance();
 
-            //Clear data
-            prefs.remove("avatar");
-            prefs.remove("name");
-            prefs.remove("email");
-            prefs.remove("gems");
-            prefs.remove("userId");
-            prefs.remove("companyId");
+          //Clear data
+          prefs.remove("avatar");
+          prefs.remove("name");
+          prefs.remove("email");
+          prefs.remove("userId");
+          prefs.remove("accessToken");
+          // prefs.remove("companyId");
 
-            //Set data
-            prefs.setString("avatar", userData["avatar"]);
-            prefs.setString("name", userData["name"]);
-            prefs.setString("email", userData["email"]);
-            prefs.setInt("gems", userData["data"]["gems"]);
-            prefs.setString("userId", userData["_id"]);
-            prefs.setString("companyId", userData["companyId"]);
-            prefs.setString("token", userData["accessToken"]);
+          //Set data
+          prefs.setString("avatar", userData["avatar"] ?? "");
+          prefs.setString("name", userData["name"]);
+          prefs.setString("email", userData["email"]);
+          prefs.setInt("gems", userData["moreData"]?["gems"] ?? 0);
+          prefs.setString("userId", userData["_id"]);
+          // prefs.setString("companyId", userData["app"] ?? userData["companyId"]);
+          prefs.setString("token", userData["accessToken"]);
 
-            Navigator.of(context).pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
-          }else{
-            if(value["message"] == "USER_IS_ALREADY") {
-              _handleShowAlert("✉️", "Email đã được sử dụng");
-            }else {
-              _handleShowAlert("⛔️", value["message"]);
-            }
+          Navigator.of(context).pushNamedAndRemoveUntil("/home", (Route<dynamic> route) => false);
+        }else{
+          if(user["message"] == "USER_IS_ALREADY") {
+            _handleShowAlert("✉️", "Email đã được sử dụng");
+          }else {
+            _handleShowAlert("⛔️", user["message"]);
           }
+        }
+
+        setState(() {
+          isLoading = false;
         });
       }
     }
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
+        child: isLoading ?
+        Container(
+          height: MediaQuery.of(context).size.height - 96,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              //*LOADING
+              CupertinoActivityIndicator(
+                animating: true,
+                color: Colors.black,
+                radius: 14,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Bạn đợi một chút xíu nhé 😘",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        )
+        : Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
           alignment: Alignment.center,

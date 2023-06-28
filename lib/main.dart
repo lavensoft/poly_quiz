@@ -82,6 +82,7 @@ class MyApp extends StatelessWidget {
         '/gems_exchange': (context) => GemsExchangeScreen(
           data: ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>,
         ),
+        '/checkin/63529fecde17b30454e2912a': (context) => LoginScreen(),
         '/checkin': (context) => CheckinScreen(
           data: ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>,
         ),

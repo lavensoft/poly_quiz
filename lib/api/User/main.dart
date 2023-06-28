@@ -69,7 +69,9 @@ class UserAPI {
       "data" : {
         "gems" : 500
       }
-    })), headers: APIConfig.HEADERS);
+    })), headers: await APIConfig.getHeaders());
+
+    print(response.body);
 
     return json.decode(response.body);
   }
