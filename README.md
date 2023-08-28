@@ -1,2 +1,2 @@
 # Bee Hero
-![Alt text](https://i.imgur.com/Do6gVAq.jpeg)
+<img src="https://i.imgur.com/Do6gVAq.jpeg" width="240"/>
